@@ -17,7 +17,7 @@ scoreboard:
     #Set to what you want to show on the first line(optional)
     first-line: "&9Advertisement"
 
-    #Delay between ads in ticks (20 ticks = 1 second)
+    #Delay between ads in seconds
     delay: 15
 
     #URL(s) for ad xml files. Go to mcads.net to find ads
@@ -32,7 +32,7 @@ bossbar:
     #Set to what you want to show before the ad(optional)
     before-ad: "&9Ad: "
 
-     #Delay between ads in ticks (20 ticks = 1 second)
+     #Delay between ads in seconds
     delay: 30
 
     #URL(s) for ad xml files. Go to mcads.net to find ads
@@ -47,7 +47,7 @@ chat:
     #Set to what you want to show on the first line(optional)
     first-line: "&9Advertisement"
 
-    #Delay between ads in ticks (20 ticks = 1 second)
+    #Delay between ads in seconds
     delay: 60
 
     #URL(s) for ad xml files. Go to mcads.net to find ads
@@ -62,7 +62,7 @@ hologram:
     #Set to what you want to show on the first line(optional)
     first-line: "&9Advertisement"
 
-    #Delay between ads in ticks (20 ticks = 1 second)
+    #Delay between ads in seconds
     delay: 30
 
     #URL(s) for ad xml files. Go to mcads.net to find ads
