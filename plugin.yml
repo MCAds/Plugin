@@ -1,6 +1,6 @@
 name: MCAds
 main: net.MCAds.advertisements.Main
-version: 0.0.1
+version: 1.0.0
 description: >
              Ads on your server
 commands:
@@ -26,5 +26,9 @@ permissions:
   mcads.admin:
     description: Gives access to admin commands
     default: false
+  mcads.create:
+    description: Allows creating holohrams
+  mcads.delete:
+    description: Allows deleting holograms
 
 softdepend: [HolographicDisplays, BarAPI]

@@ -42,19 +42,23 @@ public class Commands implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("create")) {
-					if (sender instanceof Player) {
-						Player player = (Player) sender;
-						try {
-							Ad_Hologram.create(player.getEyeLocation());
-						} catch (ParserConfigurationException | IOException | SAXException e) {
-							e.printStackTrace();
+					if (sender.hasPermission("mcads.create")) {
+						if (sender instanceof Player) {
+							Player player = (Player) sender;
+							try {
+								Ad_Hologram.create(player.getEyeLocation());
+							} catch (ParserConfigurationException | IOException | SAXException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
 				if (args[0].equalsIgnoreCase("delete")) {
-					if (sender instanceof Player) {
-						Player player = (Player) sender;
-						Ad_Hologram.delete(player.getLocation(), player, "closest");
+					if (sender.hasPermission("mcads.delete")) {
+						if (sender instanceof Player) {
+							Player player = (Player) sender;
+							Ad_Hologram.delete(player.getLocation(), player, "closest");
+						}
 					}
 				}
 				if (args[0].equalsIgnoreCase("disablebypass")) {
@@ -70,12 +74,14 @@ public class Commands implements CommandExecutor {
 			}
 			if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("delete")) {
-					if (sender instanceof Player) {
-						Player player = (Player) sender;
-						if (args[1].equalsIgnoreCase("closest")) {
-							Ad_Hologram.delete(player.getLocation(), player, "closest");
-						} else {
-							Ad_Hologram.delete(player.getLocation(), player, String.valueOf(Double.parseDouble(args[1]) * Double.parseDouble(args[1])));
+					if (sender.hasPermission("mcads.delete")) {
+						if (sender instanceof Player) {
+							Player player = (Player) sender;
+							if (args[1].equalsIgnoreCase("closest")) {
+								Ad_Hologram.delete(player.getLocation(), player, "closest");
+							} else {
+								Ad_Hologram.delete(player.getLocation(), player, String.valueOf(Double.parseDouble(args[1]) * Double.parseDouble(args[1])));
+							}
 						}
 					}
 				}
