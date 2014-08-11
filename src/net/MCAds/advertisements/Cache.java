@@ -26,6 +26,7 @@ public class Cache implements Listener {
 		}
 		ArrayList<String> urls = new ArrayList<String>();
 		for (String type : types) {
+			featured(type);
 			for (String ad : ads.ads(type)) {
 				urls.add(ad);
 				URL website = new URL(ad + "?paypal=" + Main.getInstance().getConfig().getString("paypal"));
@@ -40,23 +41,21 @@ public class Cache implements Listener {
 		}
 	}
 
-	public static String featured(String type) throws IOException {
-		File file = new File(Main.getInstance().getDataFolder() + "/cache/featured");
-		if (!file.delete()) {
-			file.delete();
-		}
-		if (!file.exists()) {
-			file.mkdir();
-		}
+	public static void featured(String type) throws IOException {
+		if (Main.getInstance().getConfig().getBoolean("featured")) {
+			File file = new File(Main.getInstance().getDataFolder() + "/cache/featured");
+			if (!file.exists()) {
+				file.mkdir();
+			}
 
-		URL featuredUrl = new URL("http://mcads.net/featured/" + type + ".xml");
-		HttpURLConnection httpcon = (HttpURLConnection) featuredUrl.openConnection();
-		httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
-		ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
-		FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/featured/" + type + ".xml");
-		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		fos.close();
-		return Main.getInstance().getDataFolder() + "/cache/featured/" + type + ".xml";
+			URL featuredUrl = new URL("http://mcads.net/featured/" + type + ".xml");
+			HttpURLConnection httpcon = (HttpURLConnection) featuredUrl.openConnection();
+			httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+			ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
+			FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/featured/" + type + ".xml");
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+			fos.close();
+		}
 	}
 
 	public void delete() {

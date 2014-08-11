@@ -2,10 +2,8 @@ package net.MCAds.advertisements;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Random;
+import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
@@ -20,10 +18,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Ad_Scoreboard implements Listener {
@@ -34,50 +28,42 @@ public class Ad_Scoreboard implements Listener {
 	public static HashMap<OfflinePlayer, Score> scores = new HashMap<OfflinePlayer, Score>();
 	public static Scoreboard sBoard;
 	public static String refLink;
+	private HashMap<Integer, String> objectives = new HashMap<Integer, String>();
+	private ScoreboardManager manager;
 
 	public void enable() {
 
 	}
 
-	ScoreboardManager manager;
-
-	public Scoreboard scoreboard() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
+	public HashMap<Integer, String> scoreboard() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		if (Main.getInstance().isEnabled("scoreboard")) {
-			ScoreboardManager manager = Main.getInstance().getServer().getScoreboardManager();
-			Scoreboard scoreboard = manager.getNewScoreboard();
-			Objective objective = scoreboard.registerNewObjective(ChatColor.translateAlternateColorCodes("&".charAt(0), Main.getInstance().getConfig().getString("scoreboard.first-line")), "dummy");
-			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Random randomizer = new Random();
+			objectives.clear();
 			Ads ads = new Ads();
-			String random = ads.ads("scoreboard").get(randomizer.nextInt(ads.ads("scoreboard").size()));
-			String xmlFile = Main.getInstance().getDataFolder() + "/cache/" + (random.replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "")) + ".xml";
-			Document doc = dBuilder.parse(xmlFile);
-			doc.getDocumentElement().normalize();
-			NodeList nList = doc.getElementsByTagName("line");
-			refLink = doc.getDocumentElement().getAttribute("reflink");
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-				Node nNode = nList.item(temp);
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
-					if (eElement.getTextContent().length() <= 16) {
-						objective.getScore(ChatColor.translateAlternateColorCodes("&".charAt(0), eElement.getTextContent()).replace("{reflink}", refLink)).setScore(Integer.parseInt(eElement.getAttribute("number")));
-					}
+			ads.ad("scoreboard", "line");
+			manager = Main.getInstance().getServer().getScoreboardManager();
+			scoreboard = manager.getNewScoreboard();
+			objective = scoreboard.registerNewObjective(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine), "dummy");
+			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
+				if (line.getValue().length() <= 16) {
+					objectives.put(line.getKey(), ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()));
 				}
 			}
-			return scoreboard;
+			return objectives;
 		}
-		return scoreboard;
+		return objectives;
 	}
 
 	@EventHandler
 	public void sbOnJoin(PlayerJoinEvent event) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		if (Main.getInstance().isEnabled("scoreboard")) {
+			if (objectives.isEmpty()) scoreboard();
 			Player player = event.getPlayer();
-			if (!player.hasPermission("mcads.bypass.scoreboard") && !Main.bypassDisable.contains(player)) {
-				if (sBoard == null) sBoard = scoreboard();
-				player.setScoreboard(sBoard);
+			if (!player.hasPermission("mcads.bypass.scoreboard") || !Ads.hidden.contains(player.getUniqueId())) {
+				for (Map.Entry<Integer, String> obj : objectives.entrySet()) {
+					objective.getScore(obj.getValue().replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName())).setScore(obj.getKey());
+				}
+				player.setScoreboard(scoreboard);
 			}
 		}
 	}
@@ -87,10 +73,13 @@ public class Ad_Scoreboard implements Listener {
 			public void run() {
 				if (Main.getInstance().isEnabled("scoreboard")) {
 					try {
-						sBoard = scoreboard();
+						scoreboard();
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-							if (!player.hasPermission("mcads.bypass.scoreboard") && !Main.bypassDisable.contains(player)) {
-								player.setScoreboard(sBoard);
+							if (!player.hasPermission("mcads.bypass.scoreboard") || !Ads.hidden.contains(player.getUniqueId())) {
+								for (Map.Entry<Integer, String> obj : objectives.entrySet()) {
+									objective.getScore(obj.getValue().replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName())).setScore(obj.getKey());
+								}
+								player.setScoreboard(scoreboard);
 							}
 						}
 					} catch (IOException | ParserConfigurationException | SAXException | InterruptedException e) {
@@ -100,5 +89,4 @@ public class Ad_Scoreboard implements Listener {
 			}
 		}, Main.getInstance().getConfig().getInt("scoreboard.delay") * 20, Main.getInstance().getConfig().getInt("scoreboard.delay") * 20);
 	}
-
 }

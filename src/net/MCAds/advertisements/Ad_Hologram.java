@@ -3,10 +3,8 @@ package net.MCAds.advertisements;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.ChatColor;
@@ -15,10 +13,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.gmail.filoghost.holograms.api.Hologram;
@@ -40,24 +34,11 @@ public class Ad_Hologram implements Listener {
 
 	public static void update(Hologram hologram) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Random randomizer = new Random();
 			Ads ads = new Ads();
-			String random = ads.ads("hologram").get(randomizer.nextInt(ads.ads("hologram").size()));
-			String xmlFile = Main.getInstance().getDataFolder() + "/cache/" + (random.replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "")) + ".xml";
-			Document doc = dBuilder.parse(xmlFile);
-			doc.getDocumentElement().normalize();
-			NodeList nList = doc.getElementsByTagName("line");
-			hologram.clearLines();
-			hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), Main.getInstance().getConfig().getString("hologram.first-line")));
-			refLink = doc.getDocumentElement().getAttribute("reflink");
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-				Node nNode = nList.item(temp);
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
-					hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), eElement.getTextContent()).replace("\n", "").replace("\t", "").replace("{reflink}", refLink));
-				}
+			ads.ad("hologram", "line");
+			hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
+			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
+				hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()));
 			}
 			hologram.setTouchHandler(new Ad_Hologram_Touch_Manager());
 			hologram.update();

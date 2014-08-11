@@ -15,7 +15,7 @@ scoreboard:
     enabled: true
 
     #Set to what you want to show on the first line(optional)
-    first-line: "&9Advertisement"
+    first-line: "&9Advertisement:"
 
     #Delay between ads in seconds
     delay: 15
@@ -30,7 +30,7 @@ bossbar:
     enabled: true
 
     #Set to what you want to show before the ad(optional)
-    before-ad: "&9Ad: "
+    before-ad: "&9Ad: &r"
 
      #Delay between ads in seconds
     delay: 30
@@ -45,7 +45,7 @@ chat:
     enabled: true
 
     #Set to what you want to show on the first line(optional)
-    first-line: "&9Advertisement"
+    first-line: "&9Advertisement:"
 
     #Delay between ads in seconds
     delay: 60
@@ -60,7 +60,7 @@ hologram:
     enabled: true
 
     #Set to what you want to show on the first line(optional)
-    first-line: "&9Advertisement"
+    first-line: "&9Advertisement:"
 
     #Delay between ads in seconds
     delay: 30

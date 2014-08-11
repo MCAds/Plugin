@@ -1,13 +1,10 @@
 package net.MCAds.advertisements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.server.v1_7_R3.Scoreboard;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +19,6 @@ public class Main extends JavaPlugin implements Listener {
 	public final Commands commands = new Commands();
 	private static Main instance;
 	public Scoreboard scoreboard;
-	public static List<Player> bypassDisable = new ArrayList<Player>();
 	public static Plugin plugin;
 	
 	@Override
