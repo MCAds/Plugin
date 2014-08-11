@@ -1,8 +1,12 @@
 package net.MCAds.advertisements;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
@@ -10,6 +14,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.xml.sax.SAXException;
+
+import com.bobacadodl.imgmessage.ImageChar;
+import com.bobacadodl.imgmessage.ImageMessage;
 
 public class Ad_Chat implements Listener {
 	public static Main plugin;
@@ -23,8 +30,20 @@ public class Ad_Chat implements Listener {
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				if (!player.hasPermission("mcads.bypass.chat") || !Ads.hidden.contains(player.getUniqueId())) {
 					player.sendMessage(Ads.firstLine);
-					for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
-						player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()));
+					if(Ads.image != null){
+						File file = new File(Ads.image);
+						BufferedImage imageToSend = ImageIO.read(file);
+						ImageMessage imageMessage = new ImageMessage(imageToSend, Ads.imageHeight, ImageChar.MEDIUM_SHADE.getChar());							
+						ArrayList<String> lines = new ArrayList<String>();
+						for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
+							lines.add(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()));
+						}
+						imageMessage.appendText(lines.toArray(new String[lines.size()]));
+						imageMessage.sendToPlayer(player);	
+					}else{
+						for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
+							player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()));
+						}
 					}
 				}
 			}

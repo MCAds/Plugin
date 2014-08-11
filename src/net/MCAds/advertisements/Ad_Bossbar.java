@@ -36,7 +36,7 @@ public class Ad_Bossbar implements Listener {
 	public void bbOnPlayerJoin(PlayerJoinEvent event) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("bossbar")) {
 			Player player = event.getPlayer();
-			if (!player.hasPermission("mcads.bypass.bossbar") || Main.bypassDisable.contains(player)) {
+			if (!player.hasPermission("mcads.bypass.bossbar") || !Ads.hidden.contains(player.getUniqueId())) {
 				if (bBar == null) {
 					bBar = bossbar();
 				} else {
@@ -54,7 +54,7 @@ public class Ad_Bossbar implements Listener {
 					try {
 						bBar = bossbar();
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-							if (!player.hasPermission("mcads.bypass.bossbar") || Main.bypassDisable.contains(player)) {
+							if (!player.hasPermission("mcads.bypass.bossbar") || !Ads.hidden.contains(player.getUniqueId())) {
 								BarAPI.setMessage(player, bBar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
 							}
 						}

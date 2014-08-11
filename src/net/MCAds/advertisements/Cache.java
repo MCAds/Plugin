@@ -58,6 +58,21 @@ public class Cache implements Listener {
 		}
 	}
 
+	public static void image(String urlString) throws IOException {
+		File file = new File(Main.getInstance().getDataFolder() + "/cache/images");
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		URL imageUrl = new URL(urlString);
+		HttpURLConnection httpcon = (HttpURLConnection) imageUrl.openConnection();
+		httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+		ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
+		String uid = urlString.replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "");
+		FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/images/" + uid);
+		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		fos.close();
+	}
+
 	public void delete() {
 		File file = new File(Main.getInstance().getDataFolder() + "/cache");
 		deleteDirectory(file);

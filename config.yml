@@ -1,13 +1,16 @@
 #MCAds Config
 
 # Set this to your PayPal email address
-paypal: gradyrmcd@gmail.com
+paypal: email@example.com
 
 # Set to false if you don't want featured ads (these ads are what supports this plugin)
 featured: true
 
 #Cache expiry time of ad files in hours(lower cache=more server lag and more bandwidth usage | higher cache=ads update less)
 cache-expiry: 24
+
+#Set to false if you don't want images to appear in ads
+images: true
 
 #Options for ads in the scoreboard
 scoreboard:
