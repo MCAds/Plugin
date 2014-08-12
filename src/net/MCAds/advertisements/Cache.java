@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 
 public class Cache implements Listener {
 
-	private String[] types = { "bossbar", "scoreboard", "chat", "hologram" };
+	public static String[] types = { "bossbar", "scoreboard", "chat", "hologram" };
 
 	public void create() throws ParserConfigurationException, IOException, SAXException {
 		Ads ads = new Ads();

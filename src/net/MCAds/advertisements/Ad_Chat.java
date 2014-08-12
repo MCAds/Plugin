@@ -29,18 +29,16 @@ public class Ad_Chat implements Listener {
 			ads.ad("chat", "line");
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				if (!player.hasPermission("mcads.bypass.chat") || !Ads.hidden.contains(player.getUniqueId())) {
-					player.sendMessage(Ads.firstLine);
-					if(Ads.image != null){
-						File file = new File(Ads.image);
-						BufferedImage imageToSend = ImageIO.read(file);
-						ImageMessage imageMessage = new ImageMessage(imageToSend, Ads.imageHeight, ImageChar.MEDIUM_SHADE.getChar());							
+					player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
+					if (Ads.image != null) {
 						ArrayList<String> lines = new ArrayList<String>();
 						for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 							lines.add(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()));
 						}
-						imageMessage.appendText(lines.toArray(new String[lines.size()]));
-						imageMessage.sendToPlayer(player);	
-					}else{
+						File file = new File(Ads.image);
+						BufferedImage imageToSend = ImageIO.read((file));
+						new ImageMessage(imageToSend, Ads.imageHeight, ImageChar.MEDIUM_SHADE.getChar()).appendText(lines.toArray(new String[lines.size()])).sendToPlayer(player);
+					} else {
 						for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 							player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()));
 						}

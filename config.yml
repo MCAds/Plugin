@@ -21,11 +21,7 @@ scoreboard:
     first-line: "&9Advertisement:"
 
     #Delay between ads in seconds
-    delay: 15
-
-    #URL(s) for ad xml files. Go to mcads.net to find ads
-    xml-files:
-      - "http://mcads.net/examples/scoreboard/1.xml"
+    delay: 30
 
 #Options for ads in the enderdragon health bar
 bossbar:
@@ -33,14 +29,10 @@ bossbar:
     enabled: true
 
     #Set to what you want to show before the ad(optional)
-    before-ad: "&9Ad: &r"
+    first-line: "&9Ad: &r"
 
      #Delay between ads in seconds
-    delay: 30
-
-    #URL(s) for ad xml files. Go to mcads.net to find ads
-    xml-files:
-      - "http://mcads.net/examples/bossbar/1.xml"
+    delay: 15
 
 #Options for ads in chat
 chat:
@@ -53,10 +45,6 @@ chat:
     #Delay between ads in seconds
     delay: 60
 
-    #URL(s) for ad xml files. Go to mcads.net to find ads
-    xml-files:
-      - "http://mcads.net/examples/chat/1.xml"
-
 #Options for holographic ads
 hologram:
     #Set to false if you don't want to be able to create holographic ads
@@ -67,7 +55,3 @@ hologram:
 
     #Delay between ads in seconds
     delay: 30
-
-    #URL(s) for ad xml files. Go to mcads.net to find ads
-    xml-files:
-    - "http://mcads.net/examples/hologram/1.xml"

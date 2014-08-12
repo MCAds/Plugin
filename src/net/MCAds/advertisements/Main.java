@@ -30,6 +30,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("mcads").setExecutor(new Commands());
 		this.getCommand("getlink").setExecutor(new Commands());
 		try {
+			ads.config();
 			cache.delete();
 			cache.create();
 			cache.timer();
@@ -60,16 +61,16 @@ public class Main extends JavaPlugin implements Listener {
 
 	public boolean isEnabled(String location) {
 		if (this.getConfig().getBoolean(location + ".enabled")) {
-			if (location == "bossbar") {
-				if (!Bukkit.getPluginManager().isPluginEnabled("BarAPI")) {
-					getLogger().severe("*** BarAPI is not installed or not enabled. ***");
-					getLogger().severe("*** Download BarAPI from http://dev.bukkit.org/bukkit-plugins/bar-api/ ***");
-					getLogger().severe("*** Bossbar ads have been disabled ***");
-					return false;
-				} else {
-					return true;
-				}
-			}
+//			if (location == "bossbar") {
+//				if (!Bukkit.getPluginManager().isPluginEnabled("BarAPI")) {
+//					getLogger().severe("*** BarAPI is not installed or not enabled. ***");
+//					getLogger().severe("*** Download BarAPI from http://dev.bukkit.org/bukkit-plugins/bar-api/ ***");
+//					getLogger().severe("*** Bossbar ads have been disabled ***");
+//					return false;
+//				} else {
+//					return true;
+//				}
+//			}
 			if (location == "hologram") {
 				if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
 					getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");

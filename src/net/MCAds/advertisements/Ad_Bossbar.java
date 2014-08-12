@@ -21,15 +21,14 @@ public class Ad_Bossbar implements Listener {
 	public static String bossbar;
 	public static String refLink;
 
-	public String bossbar() throws ParserConfigurationException, IOException, SAXException {
+	public void bossbar() throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("bossbar")) {
 			Ads ads = new Ads();
-			ads.ad("bossbar", "title");
+			ads.ad("bossbar", "line");
 			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 				bossbar = ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine + line.getValue());
 			}
 		}
-		return bossbar;
 	}
 
 	@EventHandler
@@ -37,12 +36,11 @@ public class Ad_Bossbar implements Listener {
 		if (Main.getInstance().isEnabled("bossbar")) {
 			Player player = event.getPlayer();
 			if (!player.hasPermission("mcads.bypass.bossbar") || !Ads.hidden.contains(player.getUniqueId())) {
-				if (bBar == null) {
-					bBar = bossbar();
+				if (bossbar == null) {
+					bossbar();
 				} else {
 				}
-				System.out.println(bBar);
-				BarAPI.setMessage(player, bBar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
+				BarAPI.setMessage(player, bossbar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
 			}
 		}
 	}
@@ -52,10 +50,10 @@ public class Ad_Bossbar implements Listener {
 			public void run() {
 				if (Main.getInstance().isEnabled("bossbar")) {
 					try {
-						bBar = bossbar();
+						bossbar();
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 							if (!player.hasPermission("mcads.bypass.bossbar") || !Ads.hidden.contains(player.getUniqueId())) {
-								BarAPI.setMessage(player, bBar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
+								BarAPI.setMessage(player, bossbar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
 							}
 						}
 					} catch (IOException | ParserConfigurationException | SAXException e) {

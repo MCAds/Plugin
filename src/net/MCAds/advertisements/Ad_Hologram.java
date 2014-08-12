@@ -27,7 +27,7 @@ public class Ad_Hologram implements Listener {
 
 	public static void create(Location location) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
-			Hologram hologram = HolographicDisplaysAPI.createHologram(Main.plugin, location, ChatColor.translateAlternateColorCodes("&".charAt(0), Main.getInstance().getConfig().getString("hologram.first-line")));
+			Hologram hologram = HolographicDisplaysAPI.createHologram(Main.plugin, location);
 			update(hologram);
 		}
 	}
@@ -40,7 +40,7 @@ public class Ad_Hologram implements Listener {
 			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 				hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()));
 			}
-			hologram.setTouchHandler(new Ad_Hologram_Touch_Manager());
+			//hologram.setTouchHandler(new Ad_Hologram_Touch_Manager());
 			hologram.update();
 		}
 	}

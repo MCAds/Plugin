@@ -56,7 +56,7 @@ public class ImageMessage {
             if (text.length > y) {
                 lines[y] += " " + text[y];
             }
-    	}
+        }
         return this;
     }
 
