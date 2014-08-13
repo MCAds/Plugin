@@ -37,7 +37,7 @@ public class Ad_Chat implements Listener {
 						}
 						File file = new File(Ads.image);
 						BufferedImage imageToSend = ImageIO.read((file));
-						new ImageMessage(imageToSend, Ads.imageHeight, ImageChar.MEDIUM_SHADE.getChar()).appendText(lines.toArray(new String[lines.size()])).sendToPlayer(player);
+						new ImageMessage(imageToSend, Ads.imageHeight, ImageChar.BLOCK.getChar()).appendText(lines.toArray(new String[lines.size()])).sendToPlayer(player);
 					} else {
 						for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 							player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()));

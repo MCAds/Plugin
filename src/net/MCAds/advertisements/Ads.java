@@ -72,7 +72,7 @@ public class Ads implements Listener {
 		doc.getDocumentElement().normalize();
 		refLink = doc.getDocumentElement().getAttribute("reflink");
 		firstLine = Main.getInstance().getConfig().getString(type + ".first-line");
-		if (type == "chat" && Main.getInstance().getConfig().getBoolean("images")) {
+		if (Main.getInstance().getConfig().getBoolean("images")) {
 			NodeList nodeList = doc.getElementsByTagName("image");
 			for (int temp = 0; temp < nodeList.getLength(); temp++) {
 				Node nNode = nodeList.item(temp);

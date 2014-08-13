@@ -37,25 +37,41 @@
 	</organization>
 	<repositories>
 		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+		<repository>
 			<id>confuser-repo</id>
 			<url>http://ci.frostcast.net/plugin/repository/everything</url>
 		</repository>
 		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
+			<id>hawk-repo</id>
+			<url>http://ci.hawkfalcon.com/plugin/repository/everything/</url>
 		</repository>
 	</repositories>
 	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.7.9-R0.2</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>me.confuser</groupId>
 			<artifactId>BarAPI</artifactId>
 			<version>3.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.9-R0.1</version>
-			<scope>provided</scope>
+			<groupId>com.dsh105</groupId>
+			<artifactId>HoloAPI</artifactId>
+			<version>1.2.3</version>
 		</dependency>
+		<!-- CaptainBern's Reflection -->
+		<dependency>
+			<groupId>com.captainbern</groupId>
+			<artifactId>Minecraft-Reflection</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 	</dependencies>
 </project>

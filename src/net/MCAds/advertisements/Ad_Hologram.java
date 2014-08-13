@@ -2,6 +2,7 @@ package net.MCAds.advertisements;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,19 +16,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.xml.sax.SAXException;
 
-import com.gmail.filoghost.holograms.api.Hologram;
-import com.gmail.filoghost.holograms.api.HolographicDisplaysAPI;
-import com.gmail.filoghost.holograms.api.TouchHandler;
-import com.gmail.filoghost.holograms.exception.WorldNotFoundException;
-import com.gmail.filoghost.holograms.utils.LocationUtils;
+import com.dsh105.holoapi.HoloAPI;
+import com.dsh105.holoapi.api.Hologram;
+import com.dsh105.holoapi.api.HologramFactory;
 
 public class Ad_Hologram implements Listener {
 	public static String refLink;
-	public static TouchHandler touchhandler;
 
 	public static void create(Location location) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
-			Hologram hologram = HolographicDisplaysAPI.createHologram(Main.plugin, location);
+			Hologram hologram = new HologramFactory(Main.plugin).withLocation(location).withText("").build();
+			save(hologram);
 			update(hologram);
 		}
 	}
@@ -36,75 +35,64 @@ public class Ad_Hologram implements Listener {
 		if (Main.getInstance().isEnabled("hologram")) {
 			Ads ads = new Ads();
 			ads.ad("hologram", "line");
-			hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
+			ArrayList<String> lines = new ArrayList<String>();
+			lines.add(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
 			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
-				hologram.addLine(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()));
+				lines.add(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()));
 			}
-			//hologram.setTouchHandler(new Ad_Hologram_Touch_Manager());
-			hologram.update();
+			String id = hologram.getSaveId();
+			HoloAPI.getManager().stopTracking(hologram);
+			HoloAPI.getManager().clearFromFile(hologram.getSaveId());
+			Hologram newHologram = new HologramFactory(Main.plugin).withLocation(hologram.getDefaultLocation()).withText(lines.toArray(new String[lines.size()])).build();
+			newHologram.setSaveId(id);
 		}
 	}
 
 	public static void delete(Location location, Player player, String radius) {
 		Hologram closestHologram = null;
 		if (radius == "closest") {
-			for (Hologram hologram : HolographicDisplaysAPI.getHolograms(Main.plugin)) {
+			for (Hologram hologram : HoloAPI.getManager().getHologramsFor(Main.plugin)) {
 				double closestLocation = 999999999;
-				if (hologram.getLocation().getWorld().equals(player.getWorld()) && hologram.getLocation().distanceSquared(player.getLocation()) <= closestLocation) {
-					closestLocation = hologram.getLocation().distanceSquared(player.getLocation());
+				hologram.getDefaultLocation();
+				if (hologram.getDefaultLocation().getWorld().equals(player.getWorld()) && hologram.getDefaultLocation().distanceSquared(player.getLocation()) <= closestLocation) {
+					closestLocation = hologram.getDefaultLocation().distanceSquared(player.getLocation());
 					closestHologram = hologram;
 				}
 			}
-			closestHologram.delete();
+			HoloAPI.getManager().stopTracking(closestHologram);
+			HoloAPI.getManager().clearFromFile(closestHologram.getSaveId());
 		} else {
-			for (Hologram hologram : HolographicDisplaysAPI.getHolograms(Main.plugin)) {
-				if (hologram.getLocation().getWorld().equals(player.getWorld()) && hologram.getLocation().distanceSquared(player.getLocation()) <= Double.parseDouble(radius)) {
-					hologram.delete();
+			for (Hologram hologram : HoloAPI.getManager().getHologramsFor(Main.plugin)) {
+				if (hologram.getDefaultLocation().getWorld().equals(player.getWorld()) && hologram.getDefaultLocation().distanceSquared(player.getLocation()) <= Double.parseDouble(radius)) {
+					HoloAPI.getManager().stopTracking(hologram);
+					HoloAPI.getManager().clearFromFile(hologram.getSaveId());
 				}
 			}
 		}
 
 	}
 
-	public static void save() throws IOException {
+	public static void save(Hologram hologram) throws IOException {
 		if (Main.getInstance().isEnabled("hologram")) {
 			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
 			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
+			List<String> holograms = new ArrayList<String>();
+			holograms.add(hologram.getSaveId());
+			customConfig.set("holograms", holograms);
 			customConfig.save(customYml);
-			int num = 0;
-			for (Hologram hologram : HolographicDisplaysAPI.getHolograms(Main.plugin)) {
-				num++;
-				customConfig.set("holograms." + num + ".location", LocationUtils.locationToString(hologram.getLocation()));
-				customConfig.set("holograms." + num + ".lines", hologram.getLines());
-				hologram.delete();
-			}
-			customConfig.save(customYml);
+			HoloAPI.getManager().stopTracking(hologram);
+			HoloAPI.getManager().clearFromFile(hologram.getSaveId());
 		}
 	}
 
-	public static void load() throws WorldNotFoundException, Exception {
+	public void load() throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
-			if (Main.getInstance().getConfig().get("holograms") != null) {
-				File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
-				FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
-				for (String key : customConfig.getConfigurationSection("holograms").getKeys(false)) {
-					Hologram hologram = null;
-					String locationString = customConfig.getString("holograms." + key + ".location");
-					String[] arg = locationString.split(",");
-					double[] parsed = new double[3];
-					for (int a = 0; a < 3; a++) {
-						parsed[a] = Double.parseDouble(arg[a + 1]);
-					}
-					Location location = new Location(Main.plugin.getServer().getWorld(arg[0]), parsed[0], parsed[1], parsed[2]);
-					hologram = HolographicDisplaysAPI.createHologram(Main.plugin, location);
-					List<String> lines = customConfig.getStringList("holograms." + key + ".lines");
-					for (String line : lines) {
-						hologram.addLine(line);
-					}
-					hologram.setTouchHandler(new Ad_Hologram_Touch_Manager());
-					hologram.update();
-				}
-				customYml.delete();
+			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
+			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
+			List<String> ids = customConfig.getStringList("holograms");
+			for (String id : ids) {
+				Hologram hologram = HoloAPI.getManager().getHologram(id);
+				update(hologram);
 			}
 		}
 	}
@@ -113,8 +101,7 @@ public class Ad_Hologram implements Listener {
 		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
 				if (Main.getInstance().isEnabled("hologram")) {
-					for (Hologram hologram : HolographicDisplaysAPI.getHolograms(Main.plugin)) {
-						hologram.clearLines();
+					for (Hologram hologram : HoloAPI.getManager().getHologramsFor(Main.plugin)) {
 						try {
 							update(hologram);
 						} catch (ParserConfigurationException | IOException | SAXException e) {
