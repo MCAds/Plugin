@@ -1,5 +1,7 @@
 package net.MCAds.advertisements;
 
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -9,8 +11,8 @@ import org.bukkit.scoreboard.Scoreboard;
 public class Main extends JavaPlugin implements Listener {
 	public final Ad_Bossbar bbAd = new Ad_Bossbar();
 	public final Ad_Scoreboard sbAd = new Ad_Scoreboard();
-	public final Ad_Chat chatAds = new Ad_Chat();
-	public final Ad_Hologram hgAds = new Ad_Hologram();
+	public final Ad_Chat chatAd = new Ad_Chat();
+	public final Ad_Hologram hgAd = new Ad_Hologram();
 	public final Cache cache = new Cache();
 	public final Ads ads = new Ads();
 	public final Commands commands = new Commands();
@@ -24,6 +26,7 @@ public class Main extends JavaPlugin implements Listener {
 		instance = this;
 		saveDefaultConfig();
 		registerEvents(this, new Ad_Scoreboard(), new Ad_Bossbar(), new Ads(), new Ad_Chat(), new Ad_Hologram());
+		this.getServer().getPluginManager().registerEvents(hgAd, this);
 		this.getCommand("mcads").setExecutor(new Commands());
 		this.getCommand("getlink").setExecutor(new Commands());
 		try {
@@ -33,10 +36,10 @@ public class Main extends JavaPlugin implements Listener {
 			cache.timer();
 			if (isEnabled("scoreboard")) sbAd.timer(this);
 			if (isEnabled("bossbar")) bbAd.timer(this);
-			if (isEnabled("chat")) chatAds.timer(this);
+			if (isEnabled("chat")) chatAd.timer(this);
 			if (isEnabled("hologram")) {
-				hgAds.timer(this);
-				hgAds.load();
+				hgAd.timer(this);
+				hgAd.load();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -45,6 +48,11 @@ public class Main extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
+		try {
+			hgAd.saveAll();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		cache.delete();
 		plugin = null;
 	}

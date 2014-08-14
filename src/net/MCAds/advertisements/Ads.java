@@ -28,6 +28,7 @@ public class Ads implements Listener {
 	public static String adRandom;
 	public static String refLink;
 	public HashMap<Integer, String> lines = new HashMap<Integer, String>();
+	public HashMap<Integer, String> images = new HashMap<Integer, String>();
 	public static String firstLine;
 	public static ArrayList<UUID> hidden = new ArrayList<UUID>();
 	public static String image;
@@ -82,12 +83,21 @@ public class Ads implements Listener {
 					if (!imageFile.exists()) {
 						Cache.image(eElement.getTextContent());
 					}
-					if (eElement.hasAttribute("height")) {
-						imageHeight = Integer.parseInt(eElement.getAttribute("height"));
-					} else {
-						imageHeight = 8;
+					if (type == "chat") {
+						if (eElement.hasAttribute("height")) {
+							imageHeight = Integer.parseInt(eElement.getAttribute("height"));
+						} else {
+							imageHeight = 8;
+						}
+						image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "");
 					}
-					image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "");
+					if (type == "hologram") {
+						if (eElement.hasAttribute("height")) {
+							lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", ""));
+						} else {
+							lines.put(8, "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", ""));
+						}
+					}
 				}
 			}
 		}
