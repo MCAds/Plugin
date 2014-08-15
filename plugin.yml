@@ -1,6 +1,6 @@
 name: MCAds
 main: net.MCAds.advertisements.Main
-version: 2.0.0 Snapshot
+version: 2.0.1
 description: >
              Ads on your server
 commands:
