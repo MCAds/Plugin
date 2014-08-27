@@ -2,6 +2,9 @@ package net.MCAds.advertisements;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +26,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class Ads implements Listener {
-
+	
 	public static ArrayList<String> ads = new ArrayList<String>();
 	public static String adRandom;
 	public static String refLink;
@@ -35,8 +38,8 @@ public class Ads implements Listener {
 	public static int imageHeight;
 	public File adsFile;
 	public FileConfiguration adsConfig;
-
-	public ArrayList<String> ads(String type) throws ParserConfigurationException, IOException, SAXException {
+	
+	public ArrayList<String> adList(String type) throws ParserConfigurationException, IOException, SAXException {
 		ads.clear();
 		if (Main.getInstance().getConfig().getBoolean("featured")) {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -44,12 +47,13 @@ public class Ads implements Listener {
 			String xmlFile = Main.getInstance().getDataFolder() + "/cache/featured/" + type + ".xml";
 			Document doc = dBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
-			NodeList nList = doc.getElementsByTagName("feature");
+			NodeList nList = doc.getElementsByTagName(type);
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					ads.add(eElement.getTextContent());
+					System.out.println(eElement.getTextContent());
 				}
 			}
 		}
@@ -61,14 +65,14 @@ public class Ads implements Listener {
 		}
 		return ads;
 	}
-
+	
 	public void ad(String type, String tag) throws ParserConfigurationException, IOException, SAXException {
 		lines.clear();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Random randomizer = new Random();
-		String random = ads(type).get(randomizer.nextInt(ads(type).size()));
-		String xmlFile = Main.getInstance().getDataFolder() + "/cache/" + (random).replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "") + ".xml";
+		String random = adList(type).get(randomizer.nextInt(adList(type).size()));
+		String xmlFile = Main.getInstance().getDataFolder() + "/cache/ads/" + (random).replace("http://", "").replace("https://", "").replace("..", "") + ".xml";
 		Document doc = dBuilder.parse(xmlFile);
 		doc.getDocumentElement().normalize();
 		refLink = doc.getDocumentElement().getAttribute("reflink");
@@ -79,7 +83,7 @@ public class Ads implements Listener {
 				Node nNode = nodeList.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
-					File imageFile = new File(Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", ""));
+					File imageFile = new File(Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
 					if (!imageFile.exists()) {
 						Cache.image(eElement.getTextContent());
 					}
@@ -89,13 +93,13 @@ public class Ads implements Listener {
 						} else {
 							imageHeight = 8;
 						}
-						image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", "");
+						image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", "");
 					}
 					if (type == "hologram") {
 						if (eElement.hasAttribute("height")) {
-							lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", ""));
+							lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
 						} else {
-							lines.put(8, "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("/", ",").replace("..", ""));
+							lines.put(8, "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
 						}
 					}
 				}
@@ -114,7 +118,28 @@ public class Ads implements Listener {
 			}
 		}
 	}
-
+	
+	public void collections(String collection, String type) throws ParserConfigurationException, IOException, SAXException {
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		URL url = new URL(collection);
+		URLConnection httpcon = url.openConnection();
+		httpcon.setRequestProperty("User-Agent", "Mozilla/4.0");
+		InputStream stream = httpcon.getInputStream();
+		Document doc = dBuilder.parse(stream);
+		stream.close();
+		doc.getDocumentElement().normalize();
+		NodeList nList = doc.getElementsByTagName(type);
+		System.out.println(type);
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			Node nNode = nList.item(temp);
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element eElement = (Element) nNode;
+				ads.add(eElement.getTextContent());
+			}
+		}
+	}
+	
 	public void config() throws IOException {
 		adsFile = new File(Main.getInstance().getDataFolder() + "/ads.yml");
 		adsConfig = YamlConfiguration.loadConfiguration(adsFile);
@@ -122,7 +147,11 @@ public class Ads implements Listener {
 			for (String type : Cache.types) {
 				adsConfig.set(type, Arrays.asList("http://mcads.net/examples/" + type + "/1.xml"));
 			}
-			adsConfig.save(adsFile);
+			ArrayList<String> collections = new ArrayList<String>();
+			collections.add("http://mcads.net/examples/collections/1.xml");
+			adsConfig.set("collections", Arrays.asList(collections));
 		}
+		adsConfig.save(adsFile);
 	}
+	
 }

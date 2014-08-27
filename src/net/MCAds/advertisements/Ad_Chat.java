@@ -22,7 +22,7 @@ public class Ad_Chat implements Listener {
 	public static Main plugin;
 	public static String chat;
 	public static String refLink;
-
+	
 	public void chat() throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("chat")) {
 			Ads ads = new Ads();
@@ -47,7 +47,7 @@ public class Ad_Chat implements Listener {
 			}
 		}
 	}
-
+	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
@@ -59,5 +59,5 @@ public class Ad_Chat implements Listener {
 			}
 		}, Main.getInstance().getConfig().getInt("chat.delay") * 20, Main.getInstance().getConfig().getInt("chat.delay") * 20);
 	}
-
+	
 }

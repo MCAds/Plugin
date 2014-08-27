@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 
 public class Ad_Scoreboard implements Listener {
 	public static Main plugin;
-
+	
 	public static Scoreboard scoreboard;
 	public static Objective objective;
 	public static HashMap<OfflinePlayer, Score> scores = new HashMap<OfflinePlayer, Score>();
@@ -30,11 +30,11 @@ public class Ad_Scoreboard implements Listener {
 	public static String refLink;
 	private HashMap<Integer, String> objectives = new HashMap<Integer, String>();
 	private ScoreboardManager manager;
-
+	
 	public void enable() {
-
+		
 	}
-
+	
 	public HashMap<Integer, String> scoreboard() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		if (Main.getInstance().isEnabled("scoreboard")) {
 			objectives.clear();
@@ -53,7 +53,7 @@ public class Ad_Scoreboard implements Listener {
 		}
 		return objectives;
 	}
-
+	
 	@EventHandler
 	public void sbOnJoin(PlayerJoinEvent event) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		if (Main.getInstance().isEnabled("scoreboard")) {
@@ -67,7 +67,7 @@ public class Ad_Scoreboard implements Listener {
 			}
 		}
 	}
-
+	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {

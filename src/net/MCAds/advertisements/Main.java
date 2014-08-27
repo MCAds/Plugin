@@ -45,44 +45,34 @@ public class Main extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
 	public void onDisable() {
 		try {
-			hgAd.saveAll();
+			Ad_Hologram.save();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		cache.delete();
 		plugin = null;
 	}
-
+	
 	public boolean isEnabled(String location) {
 		if (this.getConfig().getBoolean(location + ".enabled")) {
-//			if (location == "hologram") {
-//				if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-//					getLogger().severe("*** HolographicDisplays is not installed or not enabled. ***");
-//					getLogger().severe("*** Download HolographicDisplays from http://dev.bukkit.org/bukkit-plugins/holographic-displays/ ***");
-//					getLogger().severe("*** Holographic ads have been disabled ***");
-//					return false;
-//				} else {
-//					return true;
-//				}
-//			}
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	
 	public static void registerEvents(org.bukkit.plugin.Plugin plugin, Listener... listeners) {
 		for (Listener listener : listeners) {
 			Bukkit.getServer().getPluginManager().registerEvents(listener, plugin);
 		}
 	}
-
+	
 	public static Main getInstance() {
 		return instance;
 	}
-
+	
 }

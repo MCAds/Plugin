@@ -3,6 +3,7 @@ package net.MCAds.advertisements;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,25 +24,25 @@ import com.dsh105.holoapi.api.HologramFactory;
 import com.dsh105.holoapi.api.touch.TouchAction;
 import com.dsh105.holoapi.image.ImageChar;
 import com.dsh105.holoapi.image.ImageGenerator;
+import com.dsh105.holoapi.protocol.Action;
 
 public class Ad_Hologram implements Listener {
 	public static String refLink;
-
+	
 	public static void create(Location location) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
 			Hologram hologram = new HologramFactory(Main.plugin).withLocation(location).withText("").build();
-			save(hologram);
 			update(hologram);
 		}
 	}
-
+	
 	public static void update(Hologram hologram) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
 			Ads ads = new Ads();
 			ads.ad("hologram", "line");
 			String id = hologram.getSaveId();
-			HoloAPI.getManager().stopTracking(hologram);
 			HoloAPI.getManager().clearFromFile(hologram.getSaveId());
+			HoloAPI.getManager().stopTracking(hologram);
 			HologramFactory newHologram = new HologramFactory(Main.plugin).withLocation(hologram.getDefaultLocation()).withText(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
 			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 				if (line.getValue().contains("image:")) {
@@ -53,30 +54,26 @@ public class Ad_Hologram implements Listener {
 				}
 			}
 			Hologram builtHolo = newHologram.build();
-			builtHolo.setSaveId(id);;
+			builtHolo.setSaveId(id);
 			builtHolo.addTouchAction(new TouchAction() {
-
 				@Override
 				public LinkedHashMap<String, Object> getDataToSave() {
 					return null;
 				}
-
+				
 				@Override
 				public String getSaveKey() {
 					return "message";
 				}
-
+				
 				@Override
-				public void onTouch(Player player, com.dsh105.holoapi.protocol.Action action) {
-//					player.sendMessage(ChatColor.BLUE + Ads.refLink);
-					player.sendMessage("testing 13");
-					
+				public void onTouch(Player player, Action action) {
+					player.sendMessage(ChatColor.BLUE + Ads.refLink);
 				}
-
 			});
 		}
 	}
-
+	
 	public static void delete(Location location, Player player, String radius) {
 		Hologram closestHologram = null;
 		if (radius == "closest") {
@@ -98,44 +95,33 @@ public class Ad_Hologram implements Listener {
 				}
 			}
 		}
-
+		
 	}
-
-	public static void save(Hologram hologram) throws IOException {
+	
+	public static void save() throws IOException {
 		if (Main.getInstance().isEnabled("hologram")) {
-			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
-			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
-			List<String> holograms = new ArrayList<String>();
-			holograms.add(hologram.getSaveId());
-			for (String configHologram : customConfig.getStringList("holograms")) {
-				holograms.add(configHologram);
-			}
-			customConfig.set("holograms", holograms);
-			customConfig.save(customYml);
-			HoloAPI.getManager().stopTracking(hologram);
-			HoloAPI.getManager().clearFromFile(hologram.getSaveId());
-		}
-	}
-
-	public void saveAll() throws IOException {
-		if (Main.getInstance().isEnabled("hologram")) {
-			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
-			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
 			List<String> holograms = new ArrayList<String>();
 			for (Hologram hologram : HoloAPI.getManager().getHologramsFor(Main.plugin)) {
-				if (!customConfig.contains(hologram.getSaveId())) {
-					holograms.add(hologram.getSaveId());
-				}
+				holograms.add(hologram.getSaveId());
+				//HoloAPI.getManager().stopTracking(hologram);
 			}
-			for (String hologram : customConfig.getStringList("holograms")) {
-				holograms.add(hologram);
+			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
+			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
+			for (String configHologram : customConfig.getStringList("holograms")) {
+				/* if (configHologram != hologram.getSaveId()) */holograms.add(configHologram);
 			}
+			// Check for duplicate entries
+			HashSet<String> dupeCheckTemp = new HashSet<String>();
+			dupeCheckTemp.addAll(holograms);
+			holograms.clear();
+			holograms.addAll(dupeCheckTemp);
+			
+			// Save file
 			customConfig.set("holograms", holograms);
 			customConfig.save(customYml);
-
 		}
 	}
-
+	
 	public void load() throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
 			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
@@ -143,12 +129,14 @@ public class Ad_Hologram implements Listener {
 			List<String> ids = customConfig.getStringList("holograms");
 			for (String id : ids) {
 				Hologram hologram = HoloAPI.getManager().getHologram(id);
+				HoloAPI.getManager().clearFromFile(hologram.getSaveId());
+				HoloAPI.getManager().stopTracking(hologram.getSaveId());
 				update(hologram);
 			}
 			customYml.delete();
 		}
 	}
-
+	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
@@ -164,5 +152,5 @@ public class Ad_Hologram implements Listener {
 			}
 		}, Main.getInstance().getConfig().getInt("hologram.delay") * 20, Main.getInstance().getConfig().getInt("hologram.delay") * 20);
 	}
-
+	
 }
