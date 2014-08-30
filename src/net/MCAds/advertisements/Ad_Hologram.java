@@ -108,7 +108,7 @@ public class Ad_Hologram implements Listener {
 			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
 			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
 			for (String configHologram : customConfig.getStringList("holograms")) {
-				/* if (configHologram != hologram.getSaveId()) */holograms.add(configHologram);
+				holograms.add(configHologram);
 			}
 			// Check for duplicate entries
 			HashSet<String> dupeCheckTemp = new HashSet<String>();
