@@ -66,55 +66,69 @@ public class Ads implements Listener {
 		return ads;
 	}
 	
-	public void ad(String type, String tag) throws ParserConfigurationException, IOException, SAXException {
-		lines.clear();
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	public void ad(String type, String tag) throws SAXException, ParserConfigurationException, IOException {
 		Random randomizer = new Random();
 		String random = adList(type).get(randomizer.nextInt(adList(type).size()));
-		String xmlFile = Main.getInstance().getDataFolder() + "/cache/ads/" + (random).replace("http://", "").replace("https://", "").replace("..", "") + ".xml";
-		Document doc = dBuilder.parse(xmlFile);
-		doc.getDocumentElement().normalize();
-		refLink = doc.getDocumentElement().getAttribute("reflink");
-		firstLine = Main.getInstance().getConfig().getString(type + ".first-line");
-		if (Main.getInstance().getConfig().getBoolean("images")) {
-			NodeList nodeList = doc.getElementsByTagName("image");
-			for (int temp = 0; temp < nodeList.getLength(); temp++) {
-				Node nNode = nodeList.item(temp);
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
-					File imageFile = new File(Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
-					if (!imageFile.exists()) {
-						Cache.image(eElement.getTextContent());
-					}
-					if (type == "chat") {
-						if (eElement.hasAttribute("height")) {
-							imageHeight = Integer.parseInt(eElement.getAttribute("height"));
-						} else {
-							imageHeight = 8;
+		firstLine = Phrases.config.getString("first-line." + type);
+		try {
+			lines.clear();
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			String xmlFile = Main.getInstance().getDataFolder() + "/cache/ads/" + (random).replace("http://", "").replace("https://", "").replace("..", "") + ".xml";
+			Document doc = dBuilder.parse(xmlFile);
+			doc.getDocumentElement().normalize();
+			refLink = doc.getDocumentElement().getAttribute("reflink");
+			if (Main.getInstance().getConfig().getBoolean("images")) {
+				NodeList nodeList = doc.getElementsByTagName("image");
+				for (int temp = 0; temp < nodeList.getLength(); temp++) {
+					Node nNode = nodeList.item(temp);
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element eElement = (Element) nNode;
+						File imageFile = new File(Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+						if (!imageFile.exists()) {
+							Cache.image(eElement.getTextContent());
 						}
-						image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", "");
-					}
-					if (type == "hologram") {
-						if (eElement.hasAttribute("height")) {
-							lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
-						} else {
-							lines.put(8, "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+						if (type == "chat") {
+							if (eElement.hasAttribute("height")) {
+								imageHeight = Integer.parseInt(eElement.getAttribute("height"));
+							} else {
+								imageHeight = 8;
+							}
+							image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", "");
+						}
+						if (type == "hologram") {
+							if (eElement.hasAttribute("height")) {
+								lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+							} else {
+								lines.put(8, "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+							}
 						}
 					}
 				}
 			}
-		}
-		NodeList nList = doc.getElementsByTagName(tag);
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-			Node nNode = nList.item(temp);
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element eElement = (Element) nNode;
-				if (eElement.hasAttribute("number")) {
-					lines.put(Integer.parseInt(eElement.getAttribute("number")), eElement.getTextContent());
-				} else {
-					lines.put(temp, eElement.getTextContent());
+			NodeList nList = doc.getElementsByTagName(tag);
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					if (eElement.hasAttribute("number")) {
+						lines.put(Integer.parseInt(eElement.getAttribute("number")), eElement.getTextContent());
+					} else {
+						lines.put(temp, eElement.getTextContent());
+					}
 				}
+			}
+		} catch (Exception e) {
+			lines.clear();
+			System.out.println("There is an error with the ad file at " + random);
+			if (type == "scoreboard") {
+				int number = Phrases.config.getStringList("ad_error_scoreboard").size();
+				for(String line : Phrases.config.getStringList("ad_error_scoreboard")){
+					number--;
+					lines.put(number, line);
+				}
+			} else {
+				lines.put(1, Phrases.config.getString("ad_error"));
 			}
 		}
 	}

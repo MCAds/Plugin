@@ -3,10 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>MCAds</groupId>
 	<artifactId>MCAds</artifactId>
-	<version>2.0.1</version>
+	<version>2.1.0</version>
 	<name>MCAds</name>
 	<description>MCAds Bukkit Plugin</description>
 	<build>
+		<finalName>MCAds</finalName>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>

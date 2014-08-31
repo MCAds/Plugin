@@ -2,20 +2,16 @@ package net.MCAds.advertisements;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.xml.sax.SAXException;
 
 import com.dsh105.holoapi.HoloAPI;
@@ -54,11 +50,17 @@ public class Ad_Hologram implements Listener {
 				}
 			}
 			Hologram builtHolo = newHologram.build();
-			builtHolo.setSaveId(id);
+			if (id.contains("MCAds")) {
+				builtHolo.setSaveId(id);
+			} else {
+				builtHolo.setSaveId("MCAds-" + id);
+			}
 			builtHolo.addTouchAction(new TouchAction() {
 				@Override
 				public LinkedHashMap<String, Object> getDataToSave() {
-					return null;
+					LinkedHashMap<String, Object> dataMap = new LinkedHashMap<String, Object>();
+				    dataMap.put("reflink", Ads.refLink);
+				    return dataMap;
 				}
 				
 				@Override
@@ -68,7 +70,9 @@ public class Ad_Hologram implements Listener {
 				
 				@Override
 				public void onTouch(Player player, Action action) {
-					player.sendMessage(ChatColor.BLUE + Ads.refLink);
+					for(String message : Phrases.config.getStringList("reflink")){
+						player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", getDataToSave().get("reflink").toString())));
+					}
 				}
 			});
 		}
@@ -98,54 +102,17 @@ public class Ad_Hologram implements Listener {
 		
 	}
 	
-	public static void save() throws IOException {
-		if (Main.getInstance().isEnabled("hologram")) {
-			List<String> holograms = new ArrayList<String>();
-			for (Hologram hologram : HoloAPI.getManager().getHologramsFor(Main.plugin)) {
-				holograms.add(hologram.getSaveId());
-				//HoloAPI.getManager().stopTracking(hologram);
-			}
-			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
-			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
-			for (String configHologram : customConfig.getStringList("holograms")) {
-				holograms.add(configHologram);
-			}
-			// Check for duplicate entries
-			HashSet<String> dupeCheckTemp = new HashSet<String>();
-			dupeCheckTemp.addAll(holograms);
-			holograms.clear();
-			holograms.addAll(dupeCheckTemp);
-			
-			// Save file
-			customConfig.set("holograms", holograms);
-			customConfig.save(customYml);
-		}
-	}
-	
-	public void load() throws ParserConfigurationException, IOException, SAXException {
-		if (Main.getInstance().isEnabled("hologram")) {
-			File customYml = new File(Main.getInstance().getDataFolder() + "/holograms" + ".yml");
-			FileConfiguration customConfig = YamlConfiguration.loadConfiguration(customYml);
-			List<String> ids = customConfig.getStringList("holograms");
-			for (String id : ids) {
-				Hologram hologram = HoloAPI.getManager().getHologram(id);
-				HoloAPI.getManager().clearFromFile(hologram.getSaveId());
-				HoloAPI.getManager().stopTracking(hologram.getSaveId());
-				update(hologram);
-			}
-			customYml.delete();
-		}
-	}
-	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
 		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
 				if (Main.getInstance().isEnabled("hologram")) {
-					for (Hologram hologram : HoloAPI.getManager().getHologramsFor(Main.plugin)) {
-						try {
-							update(hologram);
-						} catch (ParserConfigurationException | IOException | SAXException e) {
-							e.printStackTrace();
+					for (Map.Entry<Hologram, Plugin> h : HoloAPI.getManager().getAllHolograms().entrySet()) {
+						if (h.getKey().getSaveId().contains("MCAds")) {
+							try {
+								update(h.getKey());
+							} catch (ParserConfigurationException | IOException | SAXException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -153,4 +120,17 @@ public class Ad_Hologram implements Listener {
 		}, Main.getInstance().getConfig().getInt("hologram.delay") * 20, Main.getInstance().getConfig().getInt("hologram.delay") * 20);
 	}
 	
+	public void enable() {
+		if (Main.getInstance().isEnabled("hologram")) {
+			for (Map.Entry<Hologram, Plugin> h : HoloAPI.getManager().getAllHolograms().entrySet()) {
+				if (h.getKey().getSaveId().contains("MCAds")) {
+					try {
+						update(h.getKey());
+					} catch (ParserConfigurationException | IOException | SAXException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
 }

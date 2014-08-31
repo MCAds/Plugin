@@ -1,0 +1,24 @@
+help: 
+  - "&6---- &4MCAds help &6----"
+  - "&6/mcads reload | holo [create | delete [radius | 'closest']" 
+reflink:
+  - "&9{link}&r &6 <--Click"
+first-line:
+    bossbar: "&9Ad: &r"
+    scoreboard: "&9Advertisement"
+    chat: "&9Advertisement"
+    hologram: "&9Advertisement"
+no_permission: "&4You don't have permission for that command"
+reloaded: "&aMCAds has been reloaded"
+hologram_create: "&2A holographic ad has been created at your location"
+hologram_delete_closest: "&2The closest hologran has been deleted"
+hologram_delete_radius: "&2All holograms within a radius of {radius} have been deleted"
+reflink_no_location: "&4You must specify a location to get the referral limk from"
+already_hidden: "&4Ads are already hidden for you. To show them, use &b/mcads show"
+hide_ads: "&aYou will no longer see ads. Reconnect for all changes to take effect"
+already_shown: "&4Ads are already shown for you. To hide them, use &b/mcads hide"
+show_ads: "&aYou will now see ads. Reconnect for all changes to take effect"
+ad_error: "&4There is an error. Please contact the server staff"
+ad_error_scoreboard:
+  - "&4Error with ad"
+  - "&4Contact staff"

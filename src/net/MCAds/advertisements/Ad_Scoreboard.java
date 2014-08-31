@@ -49,6 +49,7 @@ public class Ad_Scoreboard implements Listener {
 					objectives.put(line.getKey(), ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()));
 				}
 			}
+			refLink = Ads.refLink;
 			return objectives;
 		}
 		return objectives;
@@ -61,9 +62,16 @@ public class Ad_Scoreboard implements Listener {
 			Player player = event.getPlayer();
 			if (!player.hasPermission("mcads.bypass.scoreboard") || !Ads.hidden.contains(player.getUniqueId())) {
 				for (Map.Entry<Integer, String> obj : objectives.entrySet()) {
-					objective.getScore(obj.getValue().replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName())).setScore(obj.getKey());
+					String message = obj.getValue().replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName());
+					if (message.length() >= 16) {
+						objective.getScore(message.substring(0, 16)).setScore(obj.getKey());
+					} else {
+						objective.getScore(message).setScore(obj.getKey());
+					}
 				}
 				player.setScoreboard(scoreboard);
+				objectives.clear();
+				scoreboard();
 			}
 		}
 	}
@@ -77,9 +85,16 @@ public class Ad_Scoreboard implements Listener {
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 							if (!player.hasPermission("mcads.bypass.scoreboard") || !Ads.hidden.contains(player.getUniqueId())) {
 								for (Map.Entry<Integer, String> obj : objectives.entrySet()) {
-									objective.getScore(obj.getValue().replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName())).setScore(obj.getKey());
+									String message = obj.getValue().replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName());
+									if (message.length() >= 16) {
+										objective.getScore(message.substring(0, 16)).setScore(obj.getKey());
+									} else {
+										objective.getScore(message).setScore(obj.getKey());
+									}
 								}
 								player.setScoreboard(scoreboard);
+								objectives.clear();
+								scoreboard();
 							}
 						}
 					} catch (IOException | ParserConfigurationException | SAXException | InterruptedException e) {

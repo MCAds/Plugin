@@ -1,7 +1,5 @@
 package net.MCAds.advertisements;
 
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -30,6 +28,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("mcads").setExecutor(new Commands());
 		this.getCommand("getlink").setExecutor(new Commands());
 		try {
+			Phrases.enable();
 			ads.config();
 			cache.delete();
 			cache.create();
@@ -39,7 +38,7 @@ public class Main extends JavaPlugin implements Listener {
 			if (isEnabled("chat")) chatAd.timer(this);
 			if (isEnabled("hologram")) {
 				hgAd.timer(this);
-				hgAd.load();
+				hgAd.enable();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -48,11 +47,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onDisable() {
-		try {
-			Ad_Hologram.save();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		cache.delete();
 		plugin = null;
 	}
