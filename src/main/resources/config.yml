@@ -17,9 +17,6 @@ scoreboard:
     #Set to false if you don't want ads to appear on the scoreboard
     enabled: true
 
-    #Set to what you want to show on the first line(optional)
-    first-line: "&9Advertisement:"
-
     #Delay between ads in seconds
     delay: 30
 
@@ -27,9 +24,6 @@ scoreboard:
 bossbar:
     #Set to false if you don't want ads to appear on the enderdragon health bar
     enabled: true
-
-    #Set to what you want to show before the ad(optional)
-    first-line: "&9Ad: &r"
 
      #Delay between ads in seconds
     delay: 15
@@ -39,9 +33,6 @@ chat:
     #Set to false if you don't want ads to appear in chat
     enabled: true
 
-    #Set to what you want to show on the first line(optional)
-    first-line: "&9Advertisement:"
-
     #Delay between ads in seconds
     delay: 60
 
@@ -49,9 +40,6 @@ chat:
 hologram:
     #Set to false if you don't want to be able to create holographic ads
     enabled: true
-
-    #Set to what you want to show on the first line(optional)
-    first-line: "&9Advertisement:"
 
     #Delay between ads in seconds
     delay: 30

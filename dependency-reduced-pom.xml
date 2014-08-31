@@ -53,11 +53,16 @@
               <artifactSet>
                 <includes>
                   <include>net.gravitydevelopment.updater:updater</include>
+                  <include>org.mcstats.*:*</include>
                 </includes>
               </artifactSet>
               <relocations>
                 <relocation>
                   <pattern>net.gravitydevelopment.updater</pattern>
+                  <shadedPattern>net.MCAds.advertisements</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.mcstats</pattern>
                   <shadedPattern>net.MCAds.advertisements</shadedPattern>
                 </relocation>
               </relocations>
@@ -83,6 +88,10 @@
     <repository>
       <id>gravity-repo</id>
       <url>http://repo.gravitydevelopment.net</url>
+    </repository>
+    <repository>
+      <id>Plugin Metrics</id>
+      <url>http://repo.mcstats.org/content/repositories/public</url>
     </repository>
   </repositories>
   <dependencies>

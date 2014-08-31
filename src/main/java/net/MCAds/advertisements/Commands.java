@@ -71,7 +71,7 @@ public class Commands implements CommandExecutor {
 								e.printStackTrace();
 							}
 						} else {
-							sender.sendMessage(Phrases.config.getString("no_permission"));
+							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
 					}
 				}
@@ -91,41 +91,41 @@ public class Commands implements CommandExecutor {
 						Player player = (Player) sender;
 						if (player.hasPermission("mcads.hide")) {
 							if (Ads.hidden.contains(player.getUniqueId())) {
-								player.sendMessage(Phrases.config.getString("already_hidden"));
+								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_hidden")));
 							} else {
 								Ads.hidden.add(player.getUniqueId());
-								player.sendMessage(Phrases.config.getString("hide_ads"));
+								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hide_ads")));
 							}
 						}
 					}
-					if (args[0].equalsIgnoreCase("show")) {
+				}
+				if (args[0].equalsIgnoreCase("show")) {
+					if (sender instanceof Player) {
+						Player player = (Player) sender;
+						if (player.hasPermission("mcads.show")) {
+							if (Ads.hidden.contains(player.getUniqueId())) {
+								Ads.hidden.remove(player.getUniqueId());
+								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("show_ads")));
+							} else {
+								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_shown")));
+							}
+						}
+					}
+				}
+				if (args.length == 2) {
+					if (args[0].equalsIgnoreCase("delete")) {
 						if (sender instanceof Player) {
 							Player player = (Player) sender;
-							if (player.hasPermission("mcads.show")) {
-								if (Ads.hidden.contains(player.getUniqueId())) {
-									Ads.hidden.remove(player.getUniqueId());
-									player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("show_ads")));
+							if (player.hasPermission("mcads.delete")) {
+								if (args[1].equalsIgnoreCase("closest")) {
+									Ad_Hologram.delete(player.getLocation(), player, "closest");
+									player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_closest")));
 								} else {
-									player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_shown")));
+									Ad_Hologram.delete(player.getLocation(), player, String.valueOf(Double.parseDouble(args[1]) * Double.parseDouble(args[1])));
+									player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_radius")).replace("{radius}", args[1]));
 								}
 							}
-						}
-					}
-					if (args.length == 2) {
-						if (args[0].equalsIgnoreCase("delete")) {
-							if (sender instanceof Player) {
-								Player player = (Player) sender;
-								if (player.hasPermission("mcads.delete")) {
-									if (args[1].equalsIgnoreCase("closest")) {
-										Ad_Hologram.delete(player.getLocation(), player, "closest");
-										player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_closest")));
-									} else {
-										Ad_Hologram.delete(player.getLocation(), player, String.valueOf(Double.parseDouble(args[1]) * Double.parseDouble(args[1])));
-										player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_radius")).replace("{radius}", args[1]));
-									}
-								}
-								player.sendMessage(ChatColor.RED + "You do not have permission!");
-							}
+							player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
 					}
 				}

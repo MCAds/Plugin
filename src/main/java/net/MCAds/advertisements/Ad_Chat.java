@@ -28,7 +28,7 @@ public class Ad_Chat implements Listener {
 			Ads ads = new Ads();
 			ads.ad("chat", "line");
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-				if (!player.hasPermission("mcads.bypass.chat") || !Ads.hidden.contains(player.getUniqueId())) {
+				if (!Ads.hidden.contains(player.getUniqueId())) {
 					player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
 					if (Ads.image != null) {
 						ArrayList<String> lines = new ArrayList<String>();

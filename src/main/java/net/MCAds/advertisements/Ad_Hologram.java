@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -28,6 +29,11 @@ public class Ad_Hologram implements Listener {
 	public static void create(Location location) throws ParserConfigurationException, IOException, SAXException {
 		if (Main.getInstance().isEnabled("hologram")) {
 			Hologram hologram = new HologramFactory(Main.plugin).withLocation(location).withText("").build();
+			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+				if (Ads.hidden.contains(player.getUniqueId())) {
+					hologram.clear(player);
+				}
+			}
 			update(hologram);
 		}
 	}
@@ -59,8 +65,8 @@ public class Ad_Hologram implements Listener {
 				@Override
 				public LinkedHashMap<String, Object> getDataToSave() {
 					LinkedHashMap<String, Object> dataMap = new LinkedHashMap<String, Object>();
-				    dataMap.put("reflink", Ads.refLink);
-				    return dataMap;
+					dataMap.put("reflink", Ads.refLink);
+					return dataMap;
 				}
 				
 				@Override
@@ -70,11 +76,18 @@ public class Ad_Hologram implements Listener {
 				
 				@Override
 				public void onTouch(Player player, Action action) {
-					for(String message : Phrases.config.getStringList("reflink")){
+					for (String message : Phrases.config.getStringList("reflink")) {
 						player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", getDataToSave().get("reflink").toString())));
 					}
 				}
 			});
+			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+				if (Ads.hidden.contains(player.getUniqueId())) {
+					System.out.println(player.getName());
+					builtHolo.clear(player);
+				}
+			}
+			
 		}
 	}
 	

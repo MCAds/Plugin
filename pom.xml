@@ -6,6 +6,57 @@
 	<version>2.1.0</version>
 	<name>MCAds</name>
 	<description>MCAds Bukkit Plugin</description>
+	<repositories>
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>confuser-repo</id>
+			<url>http://ci.frostcast.net/plugin/repository/everything</url>
+		</repository>
+		<repository>
+			<id>hawk-repo</id>
+			<url>http://ci.hawkfalcon.com/plugin/repository/everything/</url>
+		</repository>
+		<repository>
+			<id>gravity-repo</id>
+			<url>http://repo.gravitydevelopment.net</url>
+		</repository>
+		<repository>
+			<id>Plugin Metrics</id>
+			<url>http://repo.mcstats.org/content/repositories/public</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.7.9-R0.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.confuser</groupId>
+			<artifactId>BarAPI</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dsh105</groupId>
+			<artifactId>HoloAPI</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.gravitydevelopment.updater</groupId>
+			<artifactId>updater</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mcstats.bukkit</groupId>
+			<artifactId>metrics</artifactId>
+			<version>R7</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
 	<build>
 		<finalName>MCAds</finalName>
 		<sourceDirectory>src</sourceDirectory>
@@ -46,11 +97,16 @@
 							<artifactSet>
 								<includes>
 									<include>net.gravitydevelopment.updater:updater</include>
+									<include>org.mcstats.*:*</include>
 								</includes>
 							</artifactSet>
 							<relocations>
 								<relocation>
 									<pattern>net.gravitydevelopment.updater</pattern>
+									<shadedPattern>net.MCAds.advertisements</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.mcstats</pattern>
 									<shadedPattern>net.MCAds.advertisements</shadedPattern>
 								</relocation>
 							</relocations>
@@ -68,45 +124,4 @@
 		<name>MCAds</name>
 		<url>MCAds.net</url>
 	</organization>
-	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public/</url>
-		</repository>
-		<repository>
-			<id>confuser-repo</id>
-			<url>http://ci.frostcast.net/plugin/repository/everything</url>
-		</repository>
-		<repository>
-			<id>hawk-repo</id>
-			<url>http://ci.hawkfalcon.com/plugin/repository/everything/</url>
-		</repository>
-		<repository>
-			<id>gravity-repo</id>
-			<url>http://repo.gravitydevelopment.net</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.9-R0.2</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>me.confuser</groupId>
-			<artifactId>BarAPI</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dsh105</groupId>
-			<artifactId>HoloAPI</artifactId>
-			<version>1.2.3</version>
-		</dependency>
-		<dependency>
-			<groupId>net.gravitydevelopment.updater</groupId>
-			<artifactId>updater</artifactId>
-			<version>2.1</version>
-		</dependency>
-	</dependencies>
 </project>
