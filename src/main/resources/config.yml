@@ -1,0 +1,57 @@
+#MCAds Config
+
+# Set this to your PayPal email address
+paypal: email@example.com
+
+# Set to false if you don't want featured ads (these ads are what supports this plugin)
+featured: true
+
+#Cache expiry time of ad files in hours(lower cache=more server lag and more bandwidth usage | higher cache=ads update less)
+cache-expiry: 24
+
+#Set to false if you don't want images to appear in ads
+images: true
+
+#Options for ads in the scoreboard
+scoreboard:
+    #Set to false if you don't want ads to appear on the scoreboard
+    enabled: true
+
+    #Set to what you want to show on the first line(optional)
+    first-line: "&9Advertisement:"
+
+    #Delay between ads in seconds
+    delay: 30
+
+#Options for ads in the enderdragon health bar
+bossbar:
+    #Set to false if you don't want ads to appear on the enderdragon health bar
+    enabled: true
+
+    #Set to what you want to show before the ad(optional)
+    first-line: "&9Ad: &r"
+
+     #Delay between ads in seconds
+    delay: 15
+
+#Options for ads in chat
+chat:
+    #Set to false if you don't want ads to appear in chat
+    enabled: true
+
+    #Set to what you want to show on the first line(optional)
+    first-line: "&9Advertisement:"
+
+    #Delay between ads in seconds
+    delay: 60
+
+#Options for holographic ads
+hologram:
+    #Set to false if you don't want to be able to create holographic ads
+    enabled: true
+
+    #Set to what you want to show on the first line(optional)
+    first-line: "&9Advertisement:"
+
+    #Delay between ads in seconds
+    delay: 30
