@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +15,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.w3c.dom.Document;
@@ -36,15 +34,15 @@ public class Ads implements Listener {
 	public static ArrayList<UUID> hidden = new ArrayList<UUID>();
 	public static String image;
 	public static int imageHeight;
-	public File adsFile;
-	public FileConfiguration adsConfig;
+	public File file;
+	public YamlConfiguration config;
 	
 	public ArrayList<String> adList(String type) throws ParserConfigurationException, IOException, SAXException {
 		ads.clear();
-		if (Main.getInstance().getConfig().getBoolean("featured")) {
+		if (Main.config().getBoolean("featured")) {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			String xmlFile = Main.getInstance().getDataFolder() + "/cache/featured/" + type + ".xml";
+			String xmlFile = Main.dataFolder() + "/cache/featured/" + type + ".xml";
 			Document doc = dBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName(type);
@@ -57,9 +55,9 @@ public class Ads implements Listener {
 				}
 			}
 		}
-		adsFile = new File(Main.getInstance().getDataFolder() + "/ads" + ".yml");
-		adsConfig = YamlConfiguration.loadConfiguration(adsFile);
-		List<String> userAds = adsConfig.getStringList(type);
+		file = new File(Main.dataFolder() + "/ads.yml");
+		config = YamlConfiguration.loadConfiguration(file);
+		List<String> userAds = config.getStringList(type);
 		for (String ad : userAds) {
 			ads.add(ad);
 		}
@@ -69,22 +67,22 @@ public class Ads implements Listener {
 	public void ad(String type, String tag) throws SAXException, ParserConfigurationException, IOException {
 		Random randomizer = new Random();
 		String random = adList(type).get(randomizer.nextInt(adList(type).size()));
-		firstLine = Phrases.config.getString("first-line." + type);
+		firstLine = Phrases.config.getString("first_line." + type);
 		try {
 			lines.clear();
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			String xmlFile = Main.getInstance().getDataFolder() + "/cache/ads/" + (random).replace("http://", "").replace("https://", "").replace("..", "") + ".xml";
+			String xmlFile = Main.dataFolder() + "/cache/ads/" + (random).replace("http://", "").replace("https://", "").replace("..", "") + ".xml";
 			Document doc = dBuilder.parse(xmlFile);
 			doc.getDocumentElement().normalize();
 			refLink = doc.getDocumentElement().getAttribute("reflink");
-			if (Main.getInstance().getConfig().getBoolean("images")) {
+			if (Main.config().getBoolean("images")) {
 				NodeList nodeList = doc.getElementsByTagName("image");
 				for (int temp = 0; temp < nodeList.getLength(); temp++) {
 					Node nNode = nodeList.item(temp);
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						Element eElement = (Element) nNode;
-						File imageFile = new File(Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+						File imageFile = new File(Main.dataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
 						if (!imageFile.exists()) {
 							Cache.image(eElement.getTextContent());
 						}
@@ -94,13 +92,13 @@ public class Ads implements Listener {
 							} else {
 								imageHeight = 8;
 							}
-							image = Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", "");
+							image = Main.dataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", "");
 						}
 						if (type == "hologram") {
 							if (eElement.hasAttribute("height")) {
-								lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+								lines.put(Integer.parseInt(eElement.getAttribute("height")), "image:" + Main.dataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
 							} else {
-								lines.put(8, "image:" + Main.getInstance().getDataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
+								lines.put(8, "image:" + Main.dataFolder() + "/cache/images/" + eElement.getTextContent().replace("http://", "").replace("https://", "").replace("..", ""));
 							}
 						}
 					}
@@ -155,17 +153,12 @@ public class Ads implements Listener {
 	}
 	
 	public void config() throws IOException {
-		adsFile = new File(Main.getInstance().getDataFolder() + "/ads.yml");
-		adsConfig = YamlConfiguration.loadConfiguration(adsFile);
-		if (!adsFile.exists()) {
-			for (String type : Cache.types) {
-				adsConfig.set(type, Arrays.asList("http://mcads.net/examples/" + type + "/1.xml"));
-			}
-			ArrayList<String> collections = new ArrayList<String>();
-			collections.add("http://mcads.net/examples/collections/1.xml");
-			adsConfig.set("collections", Arrays.asList(collections));
+		File file = new File(Main.dataFolder(), "ads.yml");
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		if (!file.exists()) {
+			Main.instance().saveResource("ads.yml", false);
 		}
-		adsConfig.save(adsFile);
+		config.save(file);
 	}
 	
 }

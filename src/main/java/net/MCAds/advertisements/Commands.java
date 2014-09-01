@@ -24,15 +24,14 @@ public class Commands implements CommandExecutor {
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (sender instanceof Player) {
 						if (sender.hasPermission("mcads.reload")) {
-							Main.getInstance().reloadConfig();
+							Main.instance().reloadConfig();
 							Cache cache = new Cache();
 							try {
-								Main.getInstance().reloadConfig();
-								cache.timer();
+								Main.instance().reloadConfig();
 								cache.delete();
 								cache.create();
-								String[] types = { "bossbar", "scoreboard", "chat", "hologram" };
-								for (String type : types) {
+								cache.timer();
+								for (String type : Main.types) {
 									Cache.featured(type);
 								}
 							} catch (Exception e) {
@@ -43,15 +42,14 @@ public class Commands implements CommandExecutor {
 							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
 					} else {
-						Main.getInstance().reloadConfig();
+						Main.instance().reloadConfig();
 						Cache cache = new Cache();
 						try {
-							Main.getInstance().reloadConfig();
+							Main.instance().reloadConfig();
 							cache.timer();
 							cache.delete();
 							cache.create();
-							String[] types = { "bossbar", "scoreboard", "chat", "hologram" };
-							for (String type : types) {
+							for (String type : Main.types) {
 								Cache.featured(type);
 							}
 						} catch (Exception e) {
@@ -137,17 +135,21 @@ public class Commands implements CommandExecutor {
 					sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("reflink_no_location")));
 				}
 				if (args.length == 1) {
-					if (Main.getInstance().getConfig().getBoolean("scoreboard.enabled")) {
-						for (String message : Phrases.config.getStringList("reflink")) {
-							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", Ad_Scoreboard.refLink)));
+					if (args[0].equalsIgnoreCase("scoreboard")) {
+						if (Main.config().getBoolean("scoreboard.enabled")) {
+							for (String message : Phrases.config.getStringList("reflink")) {
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", Ad_Scoreboard.refLink)));
+							}
 						}
 					}
-					if (args[0].equalsIgnoreCase("bossbar") || args[0].equalsIgnoreCase("healthbar") || args[0].equalsIgnoreCase("boss") || args[0].equalsIgnoreCase("health") || args[0].equalsIgnoreCase("bar") || args[0].equalsIgnoreCase("hbar") || args[0].equalsIgnoreCase("hb") || args[0].equalsIgnoreCase("bb")) {
-						if (Main.getInstance().getConfig().getBoolean("scoreboard.enabled")) {
+					if (args[0].equalsIgnoreCase("bossbar") || args[0].equalsIgnoreCase("healthbar") || args[0].equalsIgnoreCase("boss") || args[0].equalsIgnoreCase("health") || args[0].equalsIgnoreCase("bar") || args[0].equalsIgnoreCase("hbar") || args[0].equalsIgnoreCase("hb") || args[0].equalsIgnoreCase("bb") || args[0].equalsIgnoreCase("dragon") || args[0].equalsIgnoreCase("enderdragon")) {
+						if (Main.config().getBoolean("scoreboard.enabled")) {
 							for (String message : Phrases.config.getStringList("reflink")) {
 								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", Ad_Bossbar.refLink)));
 							}
 						}
+					}else{
+						
 					}
 				}
 			}

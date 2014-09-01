@@ -22,7 +22,7 @@ public class Cache implements Listener {
 	
 	public void create() throws ParserConfigurationException, IOException, SAXException {
 		Ads ads = new Ads();
-		File file = new File(Main.getInstance().getDataFolder() + "/cache");
+		File file = new File(Main.dataFolder() + "/cache");
 		if (!file.exists()) {
 			file.mkdir();
 		}
@@ -32,30 +32,31 @@ public class Cache implements Listener {
 			for (String ad : ads.adList(type)) {
 				urls.add(ad);
 				URL website;
+				String params = "paypal=" + Main.config().getString("paypal") + "&source=plugin&version=" + Main.version();
 				if (ad.contains("?")) {
-					website = new URL(ad + "&paypal=" + Main.getInstance().getConfig().getString("paypal"));
+					website = new URL(ad + "&" + params);
 				} else {
-					website = new URL(ad + "?paypal=" + Main.getInstance().getConfig().getString("paypal"));
+					website = new URL(ad + "?" + params);
 				}
 				HttpURLConnection httpcon = (HttpURLConnection) website.openConnection();
 				httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 				ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
 				String uid = ad.replace("http://", "").replace("https://", "").replace("..", "");
-				String uidFileString = Main.getInstance().getDataFolder() + "/cache/ads/" + uid;
+				String uidFileString = Main.dataFolder() + "/cache/ads/" + uid;
 				uidFileString = uidFileString.substring(0, uidFileString.lastIndexOf("/"));
 				File uidFile = new File(uidFileString);
 				uidFile.mkdirs();
-				FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/ads/" + uid + ".xml");
+				FileOutputStream fos = new FileOutputStream(Main.dataFolder() + "/cache/ads/" + uid + ".xml");
 				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 				fos.close();
 				rbc.close();
 			}
 		}
-		File collectionsFile = new File(Main.getInstance().getDataFolder() + "/cache/collections");
+		File collectionsFile = new File(Main.dataFolder() + "/cache/collections");
 		if (!collectionsFile.exists()) {
 			collectionsFile.mkdir();
 		}
-		File adsFile = new File(Main.getInstance().getDataFolder() + "/ads" + ".yml");
+		File adsFile = new File(Main.dataFolder() + "/ads" + ".yml");
 		YamlConfiguration adsConfig = YamlConfiguration.loadConfiguration(adsFile);
 		List<String> collections = new ArrayList<String>();
 		collections = adsConfig.getStringList("collections");
@@ -65,19 +66,19 @@ public class Cache implements Listener {
 			httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 			ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
 			String uid = collection.replace("http://", "").replace("https://", "").replace("..", "");
-			String uidFileString = Main.getInstance().getDataFolder() + "/cache/collections/" + uid;
+			String uidFileString = Main.dataFolder() + "/cache/collections/" + uid;
 			uidFileString = uidFileString.substring(0, uidFileString.lastIndexOf("/"));
 			File uidFile = new File(uidFileString);
 			uidFile.mkdirs();
-			FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/collections/" + uid);
+			FileOutputStream fos = new FileOutputStream(Main.dataFolder() + "/cache/collections/" + uid);
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			fos.close();
 		}
 	}
 	
 	public static void featured(String type) throws IOException {
-		if (Main.getInstance().getConfig().getBoolean("featured")) {
-			File file = new File(Main.getInstance().getDataFolder() + "/cache/featured");
+		if (Main.instance().getConfig().getBoolean("featured")) {
+			File file = new File(Main.dataFolder() + "/cache/featured");
 			if (!file.exists()) {
 				file.mkdir();
 			}
@@ -85,14 +86,14 @@ public class Cache implements Listener {
 			HttpURLConnection httpcon = (HttpURLConnection) featuredUrl.openConnection();
 			httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 			ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
-			FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/featured/" + type + ".xml");
+			FileOutputStream fos = new FileOutputStream(Main.dataFolder() + "/cache/featured/" + type + ".xml");
 			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			fos.close();
 		}
 	}
 	
 	public static void image(String urlString) throws IOException {
-		File file = new File(Main.getInstance().getDataFolder() + "/cache/images");
+		File file = new File(Main.instance().getDataFolder() + "/cache/images");
 		if (!file.exists()) {
 			file.mkdir();
 		}
@@ -101,17 +102,17 @@ public class Cache implements Listener {
 		httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 		ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());
 		String uid = urlString.replace("http://", "").replace("https://", "").replace("..", "");
-		String uidFileString = Main.getInstance().getDataFolder() + "/cache/images/" + uid;
+		String uidFileString = Main.dataFolder() + "/cache/images/" + uid;
 		uidFileString = uidFileString.substring(0, uidFileString.lastIndexOf("/"));
 		File uidFile = new File(uidFileString);
 		uidFile.mkdirs();
-		FileOutputStream fos = new FileOutputStream(Main.getInstance().getDataFolder() + "/cache/images/" + uid);
+		FileOutputStream fos = new FileOutputStream(Main.dataFolder() + "/cache/images/" + uid);
 		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 		fos.close();
 	}
 	
 	public void delete() {
-		File file = new File(Main.getInstance().getDataFolder() + "/cache");
+		File file = new File(Main.dataFolder() + "/cache");
 		deleteDirectory(file);
 	}
 	
@@ -130,7 +131,7 @@ public class Cache implements Listener {
 	}
 	
 	public void timer() {
-		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(Main.getInstance(), new Runnable() {
+		Main.instance().getServer().getScheduler().scheduleSyncRepeatingTask(Main.instance(), new Runnable() {
 			public void run() {
 				try {
 					delete();
@@ -142,7 +143,7 @@ public class Cache implements Listener {
 					e.printStackTrace();
 				}
 			}
-		}, Main.getInstance().getConfig().getInt("cache-expiry") * 20 * 60 * 60, Main.getInstance().getConfig().getInt("cache-expiry") * 20 * 60 * 60);
+		}, Main.config().getInt("cache-expiry") * 20 * 60 * 60, Main.config().getInt("cache-expiry") * 20 * 60 * 60);
 	}
 	
 }

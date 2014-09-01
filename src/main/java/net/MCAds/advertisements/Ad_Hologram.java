@@ -27,7 +27,7 @@ public class Ad_Hologram implements Listener {
 	public static String refLink;
 	
 	public static void create(Location location) throws ParserConfigurationException, IOException, SAXException {
-		if (Main.getInstance().isEnabled("hologram")) {
+		if (Main.isEnabled("hologram")) {
 			Hologram hologram = new HologramFactory(Main.plugin).withLocation(location).withText("").build();
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				if (Ads.hidden.contains(player.getUniqueId())) {
@@ -39,7 +39,7 @@ public class Ad_Hologram implements Listener {
 	}
 	
 	public static void update(Hologram hologram) throws ParserConfigurationException, IOException, SAXException {
-		if (Main.getInstance().isEnabled("hologram")) {
+		if (Main.isEnabled("hologram")) {
 			Ads ads = new Ads();
 			ads.ad("hologram", "line");
 			String id = hologram.getSaveId();
@@ -116,9 +116,9 @@ public class Ad_Hologram implements Listener {
 	}
 	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		Main.server().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
-				if (Main.getInstance().isEnabled("hologram")) {
+				if (Main.isEnabled("hologram")) {
 					for (Map.Entry<Hologram, Plugin> h : HoloAPI.getManager().getAllHolograms().entrySet()) {
 						if (h.getKey().getSaveId().contains("MCAds")) {
 							try {
@@ -130,11 +130,11 @@ public class Ad_Hologram implements Listener {
 					}
 				}
 			}
-		}, Main.getInstance().getConfig().getInt("hologram.delay") * 20, Main.getInstance().getConfig().getInt("hologram.delay") * 20);
+		}, Main.config().getInt("hologram.delay") * 20, Main.config().getInt("hologram.delay") * 20);
 	}
 	
 	public void enable() {
-		if (Main.getInstance().isEnabled("hologram")) {
+		if (Main.isEnabled("hologram")) {
 			for (Map.Entry<Hologram, Plugin> h : HoloAPI.getManager().getAllHolograms().entrySet()) {
 				if (h.getKey().getSaveId().contains("MCAds")) {
 					try {

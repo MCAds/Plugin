@@ -31,16 +31,12 @@ public class Ad_Scoreboard implements Listener {
 	private HashMap<Integer, String> objectives = new HashMap<Integer, String>();
 	private ScoreboardManager manager;
 	
-	public void enable() {
-		
-	}
-	
 	public HashMap<Integer, String> scoreboard() throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-		if (Main.getInstance().isEnabled("scoreboard")) {
+		if (Main.isEnabled("scoreboard")) {
 			objectives.clear();
 			Ads ads = new Ads();
 			ads.ad("scoreboard", "line");
-			manager = Main.getInstance().getServer().getScoreboardManager();
+			manager = Main.instance().getServer().getScoreboardManager();
 			scoreboard = manager.getNewScoreboard();
 			objective = scoreboard.registerNewObjective(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine), "dummy");
 			objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -57,7 +53,7 @@ public class Ad_Scoreboard implements Listener {
 	
 	@EventHandler
 	public void sbOnJoin(PlayerJoinEvent event) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-		if (Main.getInstance().isEnabled("scoreboard")) {
+		if (Main.isEnabled("scoreboard")) {
 			if (objectives.isEmpty()) scoreboard();
 			Player player = event.getPlayer();
 			if (!player.hasPermission("mcads.bypass.scoreboard") || !Ads.hidden.contains(player.getUniqueId())) {
@@ -77,9 +73,9 @@ public class Ad_Scoreboard implements Listener {
 	}
 	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		Main.instance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
-				if (Main.getInstance().isEnabled("scoreboard")) {
+				if (Main.isEnabled("scoreboard")) {
 					try {
 						scoreboard();
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -102,6 +98,6 @@ public class Ad_Scoreboard implements Listener {
 					}
 				}
 			}
-		}, Main.getInstance().getConfig().getInt("scoreboard.delay") * 20, Main.getInstance().getConfig().getInt("scoreboard.delay") * 20);
+		}, Main.config().getInt("scoreboard.delay") * 20, Main.config().getInt("scoreboard.delay") * 20);
 	}
 }

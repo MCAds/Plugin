@@ -22,7 +22,7 @@ public class Ad_Bossbar implements Listener {
 	public static String refLink;
 	
 	public void bossbar() throws ParserConfigurationException, IOException, SAXException {
-		if (Main.getInstance().isEnabled("bossbar")) {
+		if (Main.isEnabled("bossbar")) {
 			Ads ads = new Ads();
 			ads.ad("bossbar", "line");
 			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
@@ -34,27 +34,27 @@ public class Ad_Bossbar implements Listener {
 	
 	@EventHandler
 	public void bbOnPlayerJoin(PlayerJoinEvent event) throws ParserConfigurationException, IOException, SAXException {
-		if (Main.getInstance().isEnabled("bossbar")) {
+		if (Main.isEnabled("bossbar")) {
 			Player player = event.getPlayer();
 			if (Ads.hidden.contains(player.getUniqueId()) || (player.getWorld().getName().endsWith("_end"))) {
 			} else {
 				if (bossbar == null) bossbar();
-				BarAPI.setMessage(player, bossbar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
+				BarAPI.setMessage(player, bossbar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.config().getInt("bossbar.delay"));
 			}
 		}
 	}
 	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		Main.server().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
-				if (Main.getInstance().isEnabled("bossbar")) {
+				if (Main.isEnabled("bossbar")) {
 					try {
 						bossbar();
 						for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 							if (Ads.hidden.contains(player.getUniqueId()) || (player.getWorld().getName().endsWith("_end"))) {
 							} else {
 								if (bossbar == null) bossbar();
-								BarAPI.setMessage(player, bossbar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.getInstance().getConfig().getInt("bossbar.delay"));
+								BarAPI.setMessage(player, bossbar.replace("{name}", player.getName()).replace("{displayname}", player.getDisplayName()), Main.config().getInt("bossbar.delay"));
 							}
 						}
 					} catch (IOException | ParserConfigurationException | SAXException e) {
@@ -62,7 +62,7 @@ public class Ad_Bossbar implements Listener {
 					}
 				}
 			}
-		}, Main.getInstance().getConfig().getInt("bossbar.delay") * 20, Main.getInstance().getConfig().getInt("bossbar.delay") * 20);
+		}, Main.config().getInt("bossbar.delay") * 20, Main.config().getInt("bossbar.delay") * 20);
 	}
 	
 }

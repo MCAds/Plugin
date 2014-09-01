@@ -24,7 +24,7 @@ public class Ad_Chat implements Listener {
 	public static String refLink;
 	
 	public void chat() throws ParserConfigurationException, IOException, SAXException {
-		if (Main.getInstance().isEnabled("chat")) {
+		if (Main.isEnabled("chat")) {
 			Ads ads = new Ads();
 			ads.ad("chat", "line");
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
@@ -49,7 +49,7 @@ public class Ad_Chat implements Listener {
 	}
 	
 	public void timer(Main plugin) throws IOException, ParserConfigurationException, SAXException, InterruptedException {
-		Main.getInstance().getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+		Main.server().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
 			public void run() {
 				try {
 					chat();
@@ -57,7 +57,7 @@ public class Ad_Chat implements Listener {
 					e.printStackTrace();
 				}
 			}
-		}, Main.getInstance().getConfig().getInt("chat.delay") * 20, Main.getInstance().getConfig().getInt("chat.delay") * 20);
+		}, Main.config().getInt("chat.delay") * 20, Main.config().getInt("chat.delay") * 20);
 	}
 	
 }
