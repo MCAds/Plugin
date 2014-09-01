@@ -11,9 +11,7 @@ MCAds is a new way for servers to make money without begging players for donatio
 * [BarAPI](http://dev.bukkit.org/bukkit-plugins/bar-api/)
 
 ## Development builds ##
-Development builds of this project can be acquired at the provided continuous integration server. 
-These builds have not been approved by the BukkitDev staff. Use them at your own risk.
-http://ci.mcads.net/job/MCAds/
+Development builds for MCAds are available at http://ci.mcads.net/job/MCAds/. These builds are unstable and should NEVER be used on a production server.
 
 ## Commands ##
 * /mcads reload - reloads plugin
