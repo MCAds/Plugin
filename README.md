@@ -3,7 +3,7 @@
 [Ad database(coming soon)](http://mcads.net) | [Bukkit](http://dev.bukkit.org/bukkit-plugins/mcads) | [Advertiser Documentation](https://github.com/MCAds/Plugin/wiki/Advertiser-documentation)
 
 ## Description ##
-MCAds is a new way for servers to make money without begging players for donations. We do not take any commision on ads, so server owners can make exactly what advertisers pay (minus taxes and PayPal fees). MCAds is based on XML for the ads. Advertisers simply create XML files containing the contents of their ads. Server owners can add those files to their config. Servers get paid a specified amount by the advertiser based on the amount of clicks on a generated referral link. We are also currently working on a website where advertisers will be able to post their ads.
+MCAds is a new way for servers to make money without begging players for donations. We do not take any commission on ads, so server owners can make exactly what advertisers pay (minus taxes and PayPal fees). MCAds is based on XML for the ads. Advertisers simply create XML files containing the contents of their ads. Server owners can add those files to their config. Servers get paid a specified amount by the advertiser based on the amount of clicks on a generated referral link. We are also currently working on a website where advertisers will be able to post their ads.
 
 ## Dependencies ##
 * [HoloAPI](http://dev.bukkit.org/bukkit-plugins/holoapi/) (for versions 2.0+)
