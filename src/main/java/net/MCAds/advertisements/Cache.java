@@ -32,7 +32,7 @@ public class Cache implements Listener {
 			for (String ad : ads.adList(type)) {
 				urls.add(ad);
 				URL website;
-				String params = "paypal=" + Main.config().getString("paypal") + "&source=plugin&version=" + Main.version();
+				String params = "paypal=" + Main.config().getString("paypal") + "&source=plugin&version=" + Main.version() + "&language=" + Main.config().getString("language");
 				if (ad.contains("?")) {
 					website = new URL(ad + "&" + params);
 				} else {
@@ -143,7 +143,7 @@ public class Cache implements Listener {
 					e.printStackTrace();
 				}
 			}
-		}, Main.config().getInt("cache-expiry") * 20 * 60 * 60, Main.config().getInt("cache-expiry") * 20 * 60 * 60);
+		}, Main.config().getLong("cache-expiry") * 20 * 60, Main.config().getLong("cache-expiry") * 20 * 60);
 	}
 	
 }

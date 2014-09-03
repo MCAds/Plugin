@@ -97,7 +97,7 @@ public class Main extends JavaPlugin implements Listener {
 		return instance.getServer();
 	}
 	
-	public static Reader textResource(String string){
+	public static Reader textResource(String string) {
 		return instance().getTextResource(string);
 	}
 	

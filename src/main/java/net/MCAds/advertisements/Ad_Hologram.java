@@ -48,9 +48,11 @@ public class Ad_Hologram implements Listener {
 			HologramFactory newHologram = new HologramFactory(Main.plugin).withLocation(hologram.getDefaultLocation()).withText(ChatColor.translateAlternateColorCodes("&".charAt(0), Ads.firstLine));
 			for (Map.Entry<Integer, String> line : ads.lines.entrySet()) {
 				if (line.getValue().contains("image:")) {
-					Integer height = line.getKey();
-					File file = new File(line.getValue().replace("image:", ""));
-					newHologram.withImage(new ImageGenerator("MCAds", file, height, ImageChar.BLOCK, false));
+					if (Main.config().getBoolean("images")) {
+						Integer height = line.getKey();
+						File file = new File(line.getValue().replace("image:", ""));
+						newHologram.withImage(new ImageGenerator("MCAds", file, height, ImageChar.BLOCK, false));
+					}  
 				} else {
 					newHologram.withText(ChatColor.translateAlternateColorCodes("&".charAt(0), line.getValue()).replace("{", "%").replace("}", "%"));
 				}
@@ -83,7 +85,6 @@ public class Ad_Hologram implements Listener {
 			});
 			for (Player player : Bukkit.getServer().getOnlinePlayers()) {
 				if (Ads.hidden.contains(player.getUniqueId())) {
-					System.out.println(player.getName());
 					builtHolo.clear(player);
 				}
 			}

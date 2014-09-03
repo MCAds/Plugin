@@ -22,33 +22,14 @@ public class Commands implements CommandExecutor {
 			}
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("reload")) {
-					if (sender instanceof Player) {
-						if (sender.hasPermission("mcads.reload")) {
-							Main.instance().reloadConfig();
-							Cache cache = new Cache();
-							try {
-								Main.instance().reloadConfig();
-								cache.delete();
-								cache.create();
-								cache.timer();
-								for (String type : Main.types) {
-									Cache.featured(type);
-								}
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("reloaded")));
-						} else {
-							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
-						}
-					} else {
+					if (sender.hasPermission("mcads.reload")) {
 						Main.instance().reloadConfig();
 						Cache cache = new Cache();
 						try {
 							Main.instance().reloadConfig();
-							cache.timer();
 							cache.delete();
 							cache.create();
+							cache.timer();
 							for (String type : Main.types) {
 								Cache.featured(type);
 							}
@@ -56,6 +37,8 @@ public class Commands implements CommandExecutor {
 							e.printStackTrace();
 						}
 						sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("reloaded")));
+					} else {
+						sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 					}
 				}
 				if (args[0].equalsIgnoreCase("create")) {
@@ -64,7 +47,7 @@ public class Commands implements CommandExecutor {
 						if (player.hasPermission("mcads.create")) {
 							try {
 								Ad_Hologram.create(player.getEyeLocation());
-								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_create")));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_create")));
 							} catch (ParserConfigurationException | IOException | SAXException e) {
 								e.printStackTrace();
 							}
@@ -78,7 +61,7 @@ public class Commands implements CommandExecutor {
 						if (sender.hasPermission("mcads.delete")) {
 							Player player = (Player) sender;
 							Ad_Hologram.delete(player.getLocation(), player, "closest");
-							player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_closest")));
+							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_closest")));
 						} else {
 							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
@@ -89,11 +72,13 @@ public class Commands implements CommandExecutor {
 						Player player = (Player) sender;
 						if (player.hasPermission("mcads.hide")) {
 							if (Ads.hidden.contains(player.getUniqueId())) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_hidden")));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_hidden")));
 							} else {
 								Ads.hidden.add(player.getUniqueId());
-								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hide_ads")));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hide_ads")));
 							}
+						} else {
+							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
 					}
 				}
@@ -103,10 +88,12 @@ public class Commands implements CommandExecutor {
 						if (player.hasPermission("mcads.show")) {
 							if (Ads.hidden.contains(player.getUniqueId())) {
 								Ads.hidden.remove(player.getUniqueId());
-								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("show_ads")));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("show_ads")));
 							} else {
-								player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_shown")));
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("already_shown")));
 							}
+						} else {
+							sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
 					}
 				}
@@ -117,13 +104,14 @@ public class Commands implements CommandExecutor {
 							if (player.hasPermission("mcads.delete")) {
 								if (args[1].equalsIgnoreCase("closest")) {
 									Ad_Hologram.delete(player.getLocation(), player, "closest");
-									player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_closest")));
+									sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_closest")));
 								} else {
 									Ad_Hologram.delete(player.getLocation(), player, String.valueOf(Double.parseDouble(args[1]) * Double.parseDouble(args[1])));
-									player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_radius")).replace("{radius}", args[1]));
+									sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("hologram_delete_radius")).replace("{radius}", args[1]));
 								}
+							} else {
+								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 							}
-							player.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), Phrases.config.getString("no_permission")));
 						}
 					}
 				}
@@ -136,7 +124,7 @@ public class Commands implements CommandExecutor {
 				}
 				if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("scoreboard")) {
-						if (Main.config().getBoolean("scoreboard.enabled")) {
+						if (Main.config().getBoolean("bossbar.enabled")) {
 							for (String message : Phrases.config.getStringList("reflink")) {
 								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", Ad_Scoreboard.refLink)));
 							}
@@ -148,7 +136,7 @@ public class Commands implements CommandExecutor {
 								sender.sendMessage(ChatColor.translateAlternateColorCodes("&".charAt(0), message.replace("{link}", Ad_Bossbar.refLink)));
 							}
 						}
-					}else{
+					} else {
 						
 					}
 				}
