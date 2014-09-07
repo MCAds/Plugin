@@ -3,6 +3,7 @@ package net.MCAds.advertisements;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class Ads implements Listener {
 			System.out.println("There is an error with the ad file at " + random);
 			if (type == "scoreboard") {
 				int number = Phrases.config.getStringList("ad_error_scoreboard").size();
-				for(String line : Phrases.config.getStringList("ad_error_scoreboard")){
+				for (String line : Phrases.config.getStringList("ad_error_scoreboard")) {
 					number--;
 					lines.put(number, line);
 				}
@@ -153,11 +154,11 @@ public class Ads implements Listener {
 	}
 	
 	public void config() throws IOException {
-		File file = new File(Main.dataFolder(), "ads.yml");
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (!file.exists()) {
-			Main.instance().saveResource("ads.yml", false);
-		}
+		file = new File(Main.dataFolder(), "ads.yml");
+		config = YamlConfiguration.loadConfiguration(file);
+		config.options().copyDefaults(true);
+		Reader textResource = Main.textResource("ads.yml");
+		config.setDefaults(YamlConfiguration.loadConfiguration(textResource));
 		config.save(file);
 	}
 	
