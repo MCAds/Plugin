@@ -41,6 +41,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getServer().getPluginManager().registerEvents(hgAd, this);
 		this.getCommand("mcads").setExecutor(new Commands());
 		this.getCommand("getlink").setExecutor(new Commands());
+		DependencyDownloader.download();
 		try {
 			Phrases.enable();
 			ads.config();
