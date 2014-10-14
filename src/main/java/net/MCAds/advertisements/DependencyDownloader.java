@@ -10,21 +10,39 @@ import java.net.URL;
 public class DependencyDownloader {
 	
 	public static void download() {
-		File holoAPIDirectory = new File("plugins/HoloAPI*.jar");
-		if (!holoAPIDirectory.exists()) {
+		boolean holoAPI = false;
+		boolean barAPI = false;
+		String[] pluginsList = new File("plugins").list();
+		for (String file : pluginsList) {
+			// HoloAPI is most likely installed
+			if (file.contains("HoloAPI")) {
+				holoAPI = true;
+			}
+			// BarAPI is most likely installed
+			if (file.contains("BarAPI")) {
+				barAPI = true;
+			}
+		}
+		
+		// Download HoloAPI
+		if (holoAPI == false) {
 			try {
 				downloadFile("http://dev.bukkit.org/media/files/787/363/HoloAPI-v1.2.3.jar", "plugins/HoloAPI.jar");
-			} catch (IOException e) {
+				Main.server().getPluginManager().loadPlugin(new File("plugins/HoloAPI.jar"));
+				Main.server().reload();
+			} catch (Exception e) {
 				System.out.println("Downloading the dependency \"HoloAPI\" failed. please download it manually.");
 			}
 		}
 		
-		File barAPIDirectory = new File("plugins/BarAPI*.jar");
-		if (!barAPIDirectory.exists()) {
+		// Download BarAPI
+		if (barAPI == false) {
 			try {
 				downloadFile("http://dev.bukkit.org/media/files/785/999/BarAPI.jar", "plugins/BarAPI.jar");
-			} catch (IOException e) {
-				System.out.println("Downloading the dependency \"HoloAPI\" failed. please download it manually.");
+				Main.server().getPluginManager().loadPlugin(new File("plugins/BarAPI.jar"));
+				Main.server().reload();
+			} catch (Exception e) {
+				System.out.println("Downloading the dependency \"BarAPI\" failed. please download it manually.");
 			}
 		}
 	}

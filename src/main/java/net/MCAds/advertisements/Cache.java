@@ -82,7 +82,7 @@ public class Cache implements Listener {
 			if (!file.exists()) {
 				file.mkdir();
 			}
-			URL featuredUrl = new URL("http://mcads.net/featured/" + type + ".xml");
+			URL featuredUrl = new URL("https://mcads.net/featured/" + type + ".xml");
 			HttpURLConnection httpcon = (HttpURLConnection) featuredUrl.openConnection();
 			httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 			ReadableByteChannel rbc = Channels.newChannel(httpcon.getInputStream());

@@ -2,16 +2,16 @@
 
 #Bossbar ads are displayed on the one line bar at the top of the screen
 bossbar:
-  - "http://mcads.net/examples/bossbar/1.xml"
+  - "https://mcads.net/examples/bossbar/1.xml"
 
 #Scoreboard ads are displayed on the right side of the player's screen and have a number/score assigned to each line
 scoreboard:
-  - "http://mcads.net/examples/scoreboard/1.xml"
+  - "https://mcads.net/examples/scoreboard/1.xml"
 
 #Chat ads are simply automated messages sent to all players in chat
 chat:
-  - "http://mcads.net/examples/chat/1.xml"
+  - "https://mcads.net/examples/chat/1.xml"
 
 #Holographic ads are floating text/images that can be set by anyone with the permission "mcads.create". They can be created by using the command "/mcads create" in the desired location
 hologram:
-  - "http://mcads.net/examples/hologram/1.xml"
+  - "https://mcads.net/examples/hologram/1.xml"

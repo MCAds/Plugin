@@ -16,23 +16,23 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.mcstats.Metrics;
 
 public class Main extends JavaPlugin implements Listener {
-	public final Ad_Bossbar bbAd = new Ad_Bossbar();
-	public final Ad_Scoreboard sbAd = new Ad_Scoreboard();
-	public final Ad_Chat chatAd = new Ad_Chat();
-	public final Ad_Hologram hgAd = new Ad_Hologram();
-	public final Cache cache = new Cache();
-	public final Ads ads = new Ads();
-	public final Commands commands = new Commands();
 	private static Main instance;
 	public Scoreboard scoreboard;
 	public static Plugin plugin;
+	public final Cache cache = new Cache();
 	public final static String[] types = { "bossbar", "scoreboard", "chat", "hologram" };
 	
 	@Override
-	// This is called when the plugin is enabled
 	public void onEnable() {
 		plugin = this;
 		instance = this;
+		DependencyDownloader.download();
+		final Ad_Bossbar bbAd = new Ad_Bossbar();
+		final Ad_Scoreboard sbAd = new Ad_Scoreboard();
+		final Ad_Chat chatAd = new Ad_Chat();
+		final Ad_Hologram hgAd = new Ad_Hologram();
+		final Ads ads = new Ads();
+		
 		saveDefaultConfig();
 		getConfig().options().copyDefaults(true);
 		Reader textResource = getTextResource("config.yml");
@@ -42,7 +42,6 @@ public class Main extends JavaPlugin implements Listener {
 		this.getServer().getPluginManager().registerEvents(hgAd, this);
 		this.getCommand("mcads").setExecutor(new Commands());
 		this.getCommand("getlink").setExecutor(new Commands());
-		DependencyDownloader.download();
 		try {
 			Phrases.enable();
 			ads.config();
@@ -70,7 +69,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onDisable() {
-		// This is called when the plugin is disabled
 		cache.delete();
 		
 		// Prevents memory leaks on /reload
