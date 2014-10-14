@@ -47,6 +47,7 @@ public class DependencyDownloader {
 		}
 	}
 	
+	// Thanks to Retherz_ (https://forums.bukkit.org/members/retherz_.90659801/) for this
 	public static void downloadFile(String link, String directory) throws IOException {
 		URL url = new URL(link);
 		InputStream is = url.openStream();
