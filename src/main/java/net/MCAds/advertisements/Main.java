@@ -29,6 +29,7 @@ public class Main extends JavaPlugin implements Listener {
 	public final static String[] types = { "bossbar", "scoreboard", "chat", "hologram" };
 	
 	@Override
+	// This is called when the plugin is enabled
 	public void onEnable() {
 		plugin = this;
 		instance = this;
@@ -69,6 +70,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onDisable() {
+		// This is called when the plugin is disabled
 		cache.delete();
 		
 		// Prevents memory leaks on /reload
