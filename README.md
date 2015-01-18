@@ -1,6 +1,6 @@
 **The current version only supports 1.7.9+**
 
-[Ad database(coming soon)](http://mcads.net) | [Bukkit](http://dev.bukkit.org/bukkit-plugins/mcads) | [Advertiser Documentation](https://github.com/MCAds/Plugin/wiki/Advertiser-documentation)
+[Ad database](http://mcads.net) | [Bukkit](http://dev.bukkit.org/bukkit-plugins/mcads) | [Advertiser Documentation](https://github.com/MCAds/Plugin/wiki/Advertiser-documentation)
 
 ## Description ##
 MCAds is a new way for servers to make money without begging players for donations. We do not take any commission on ads, so server owners can make exactly what advertisers pay (minus taxes and PayPal fees). MCAds is based on XML for the ads. Advertisers simply create XML files containing the contents of their ads. Server owners can add those files to their config. Servers get paid a specified amount by the advertiser based on the amount of clicks on a generated referral link. We are also currently working on a website where advertisers will be able to post their ads.
@@ -27,13 +27,13 @@ Ads in any location can be disabled from the config.
 
 ## Screenshots ##
 ### Scoreboard ###
-![Scoreboard](http://mcads.net/examples/scoreboard.1.png)
+![Scoreboard](https://examples.mcads.net/images/scoreboard.png)
 ### Chat ###
-![Chat](http://mcads.net/examples/chat_with_image_new.png)
+![Chat](https://examples.mcads.net/images/chat.png)
 ### Bossbar ###
-![Bossbar](http://mcads.net/examples/bossbar.png)
+![Bossbar](https://examples.mcads.net/images/bossbar.png)
 ### Hologram ###
-![Hologram](http://mcads.net/examples/hologram_with_image.png)
+![Hologram](https://examples.mcads.net/images/hologram.png)
 
 ## Credits ##
 MCAds uses [ImageMessage](http://forums.bukkit.org/threads/lib-imagemessage-v2-1-send-images-to-players-via-the-chat.204902/) by [bobacadodl](http://forums.bukkit.org/members/bobacadodl.90595184/) for sending images in chat.
