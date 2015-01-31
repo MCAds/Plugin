@@ -52,7 +52,6 @@ public class Ads implements Listener {
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
 					ads.add(eElement.getTextContent());
-					System.out.println(eElement.getTextContent());
 				}
 			}
 		}
